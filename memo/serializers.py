@@ -10,7 +10,12 @@ class SnippetSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         # Добавляем текущего пользователя из context в данные
-        validated_data['owner'] = self.context['request'].user
+        a = self.context
+        print(a)
+        # if self.context['request'].user:
+        #     validated_data['owner'] = self.context['request'].user
+        # else:
+        #     validated_data['owner'] = 'UNknown'
         return super().create(validated_data)
     
 

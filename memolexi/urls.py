@@ -18,8 +18,8 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
-
 from memo import views
+
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -35,8 +35,8 @@ urlpatterns = [
     path('kek/', views.keking),
     path('testing/', views.MyAPIView.as_view()),
     
-    path('snippets/', views.snippet_list),
-    path('snippets/<int:pk>/', views.snippet_detail),
+    path('snippets/', views.SnippetList.as_view()),
+    path('snippets/<int:pk>/', views.SnippetDetail.as_view()),
 ]
 
 # Применяем format_suffix_patterns только к вручную определенным маршрутам
