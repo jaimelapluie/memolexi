@@ -1,0 +1,23 @@
+# Виртуальные окружения
+mememv/
+
+
+# Файлы настройки и конфигурации
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+db.sqlite3
+*.log
+
+# Static и media файлы
+/static/
+/media/
+
+# Настройки среды разработки
+.env
+.idea/
+
+# Миграции
+*.sqlite3
+migrations/
