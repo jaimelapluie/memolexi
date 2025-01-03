@@ -37,7 +37,13 @@ urlpatterns = [
     
     path('snippets/', views.SnippetList.as_view()),
     path('snippets/<int:pk>/', views.SnippetDetail.as_view()),
+    
+    path('users/', views.UserList.as_view()),
+    path('users/<int:pk>/', views.UserDetail.as_view()),
 ]
 
 # Применяем format_suffix_patterns только к вручную определенным маршрутам
-urlpatterns = urlpatterns[:4] + format_suffix_patterns(urlpatterns[4:])
+# urlpatterns = urlpatterns[:4] + format_suffix_patterns(urlpatterns[4:])
+# urlpatterns += [
+#     path('api-auth/', include('rest_framework.urls')),
+# ]

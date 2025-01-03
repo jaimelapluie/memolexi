@@ -1,14 +1,21 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets, generics
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from memo.models import Snippet
+from memo.permissions import IsOwnerOrReadOnly
 from memo.serializers import SnippetSerializer, UserSerializer, GroupSerializer
 from django.http import JsonResponse, Http404
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+
+
+# import os
+# print("PATH:", os.environ.get("PATH"))
+# import psycopg2
+# print("Psycopg2 version:", psycopg2.__version__)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -30,7 +37,7 @@ class GroupViewSet(viewsets.ModelViewSet):
  
 
 def keking(request):
-    data = {'users': ['Zaychal', 'Kozlyazh', 'Kotedral']}
+    data = {'users': ['Zaychal', 'Kozlyazh', 'Kotedral1']}
     return JsonResponse(data)
 
 
@@ -68,9 +75,25 @@ class MyAPIView(APIView):
 class SnippetList(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        print('A_perform_create')
+        serializer.save(owner=self.request.user)
 
 
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                      IsOwnerOrReadOnly]
     
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

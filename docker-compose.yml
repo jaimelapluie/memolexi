@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15  # Используем образ PostgreSQL 15
+    container_name: my_postgres_db
+    environment:
+      POSTGRES_USER: res       # Пользователь базы данных
+      POSTGRES_PASSWORD: pass  # Пароль для пользователя
+      POSTGRES_DB: db_docker     # Имя базы данных
+    ports:
+      - "5432:5432"               # Пробрасываем порт
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Сохраняем данные
+
+  web:
+    build:
+      context: .
+    container_name: django_app
+    command: python manage.py runserver 0.0.0.0:8000  # Изменил на 0.0.0.0
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db  # Изменил на правильное имя сервиса
+    environment:
+      - DATABASE_URL=postgres://res:pass@db:5432/db_docker
+
+volumes:
+  postgres_data:                  # Определяем volume для хранения данных
+
+
