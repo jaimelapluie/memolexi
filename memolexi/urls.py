@@ -17,38 +17,84 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
+from rest_framework.routers import DefaultRouter
 from rest_framework.urlpatterns import format_suffix_patterns
+
 from memo import views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+# router = DefaultRouter()
+# router.register(r'words', views.Wording, basename='wordcards')  # Обратите внимание на имя
+# router.register(r'users', views.UserView, basename='user')
+# router.register(r'parts-of-speech', views.PartOfSpeechViewSet, basename='partofspeech')  # Новый маршрут
 
 
-# Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
+urlpatterns = ([
+    path('words/', views.Wording.as_view()),
+    path('words/<int:pk>/', views.WordDetail.as_view(), name='words-detail'),
+    path('users/', views.UserView.as_view()),
+    # path('words/', views.wording)
+])  # + router.urls)
 
-urlpatterns = format_suffix_patterns([
-    path('', views.api_root),
-    path('kek/', views.keking),
-    path('testing/', views.MyAPIView.as_view()),
-    path('testing1/', views.my_api_view),
-    
-    path('snippets/',
-        views.SnippetList.as_view(),
-        name='snippet-list'),
-    path('snippets/<int:pk>/',
-        views.SnippetDetail.as_view(),
-        name='snippet-detail'),
-    path('snippets/<int:pk>/highlight/',
-        views.SnippetHighlight.as_view(),
-        name='snippet-highlight'),
-    path('users/',
-        views.UserList.as_view(),
-        name='user-list'),
-    path('users/<int:pk>/',
-        views.UserDetail.as_view(),
-        name='user-detail')
-])
 
+"""Второй вариант"""
+# router = routers.DefaultRouter()
+# # router = routers.SimpleRouter()
+# router.register(r'snippets', views.SnippetViewSet, basename='snippet')
+# router.register(r'users', views.UserViewSet, basename='user')
+#
+# # The API URLs are now determined automatically by the router.
+# urlpatterns = [
+#     path('', include(router.urls)),
+#     path('api-auth/', include('rest_framework.urls')),
+#     path('api/', views.api_root),  # Добавление маршрута для api_root
+#     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+#     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+# ]
+
+"""Первый вариант"""
+# urlpatterns = format_suffix_patterns([
+#     path('', views.api_root),
+#     path('kek/', views.keking),
+#     path('testing/', views.MyAPIView.as_view()),
+#     path('testing1/', views.my_api_view),
+# ])
+
+
+# snippet_list = SnippetViewSet.as_view({
+#     'get': 'list',
+#     'post': 'create'
+# })
+# snippet_detail = SnippetViewSet.as_view({
+#     'get': 'retrieve',
+#     'put': 'update',
+#     'patch': 'partial_update',
+#     'delete': 'destroy'
+# })
+# snippet_highlight = SnippetViewSet.as_view({
+#     'get': 'highlight'
+# }, renderer_classes=[renderers.StaticHTMLRenderer])
+# user_list = UserViewSet.as_view({
+#     'get': 'list'
+# })
+# user_detail = UserViewSet.as_view({
+#     'get': 'retrieve'
+# })
+#
+#
+# # Wire up our API using automatic URL routing.
+# # Additionally, we include login URLs for the browsable API.
+# urlpatterns = format_suffix_patterns([
+#     path('', views.api_root),
+#     path('kek/', views.keking),
+#     path('testing/', views.MyAPIView.as_view()),
+#     path('testing1/', views.my_api_view),
+#
+#     path('', api_root),
+#     path('snippets/', snippet_list, name='snippet-list'),
+#     path('snippets/<int:pk>/', snippet_detail, name='snippet-detail'),
+#     path('snippets/<int:pk>/highlight/', snippet_highlight, name='snippet-highlight'),
+#     path('users/', user_list, name='user-list'),
+#     path('users/<int:pk>/', user_detail, name='user-detail')
+# ])

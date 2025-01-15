@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,16 +48,26 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-        'rest_framework.permissions.IsAuthenticated',
-        # 'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 3
     
+}
+
+SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+        'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+        'ROTATE_REFRESH_TOKENS': False,
+        'BLACKLIST_AFTER_ROTATION': True,
+        'ALGORITHM': 'HS256',
+        'SIGNING_KEY': SECRET_KEY,
 }
 
 MIDDLEWARE = [
@@ -93,23 +104,23 @@ WSGI_APPLICATION = 'memolexi.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 # старая БД
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'memo_db',  # Совпадает с POSTGRES_DB
-        'USER': 'res',  # Совпадает с POSTGRES_USER
-        'PASSWORD': 'pass',  # Совпадает с POSTGRES_PASSWORD
-        'HOST': 'localhost',  # Docker-контейнер доступен по localhost
-        'PORT': '5432',  # Открытый порт PostgreSQL
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'memo_db',  # Совпадает с POSTGRES_DB
+#         'USER': 'res',  # Совпадает с POSTGRES_USER
+#         'PASSWORD': 'pass',  # Совпадает с POSTGRES_PASSWORD
+#         'HOST': 'localhost',  # Docker-контейнер доступен по localhost
+#         'PORT': '5432',  # Открытый порт PostgreSQL
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
