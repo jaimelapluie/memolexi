@@ -53,7 +53,7 @@ class WordCards(models.Model):
     picture = models.ImageField(blank=True, null=True)
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, related_name='words')
     time_create = models.DateTimeField(auto_now_add=True)
-    part_of_speech = models.ForeignKey('PartOfSpeech', blank=True, on_delete=models.PROTECT)
+    part_of_speech = models.ForeignKey('PartOfSpeech', blank=True, on_delete=models.PROTECT, related_name='words')
     
     def __str__(self):
         return self.word

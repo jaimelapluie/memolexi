@@ -2,10 +2,12 @@ from typing import Any
 
 from django.contrib.auth.models import Group, User
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, serializers
 from rest_framework.exceptions import NotFound
 from rest_framework.viewsets import ModelViewSet
 
+from memo.filters import WordFilter
 from memo.models import WordCards, PartOfSpeech  # Snippet
 from memo.permissions import IsOwnerOrReadOnly
 from memo.serializers import WordSerializer, UserSerializer  # SnippetSerializer, GroupSerializer
@@ -34,8 +36,10 @@ class WordDetail(APIView):
             return WordCards.objects.get(id=pk)
         except WordCards.DoesNotExist:
             raise Http404('Запись не найдена (get_object)')
-
+    
     def get(self, request, pk):
+        
+        print(request.query_params)
         word = self.get_object(pk)  # Получаем объект записи
         serializer = WordSerializer(word)
         return Response(serializer.data)  # Возвращаем данные
@@ -55,11 +59,15 @@ class WordDetail(APIView):
     
     
 class Wording(APIView):
+    filter_backends = [WordFilter]
+    
     def get(self, request):
-        words = WordCards.objects.all()
-        # return Response(list(words.values()))
-        serializer = WordSerializer(words, many=True)
-        return Response(serializer.data)
+        queryset = WordCards.objects.all()
+        for beckend_instance in self.filter_backends:
+            queryset = beckend_instance().filter_queryset(request=request, queryset=queryset, view=self)
+            
+        serializer = WordSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, format=None):
         serializer = WordSerializer(data=request.data)
@@ -67,7 +75,7 @@ class Wording(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
 
 class UserView(APIView):
     def get(self, request):
