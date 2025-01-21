@@ -7,7 +7,7 @@ from rest_framework import permissions, viewsets, serializers
 from rest_framework.exceptions import NotFound
 from rest_framework.viewsets import ModelViewSet
 
-from memo.filters import WordFilter
+from memo.filters import WordFilter1, WordFilter2
 from memo.models import WordCards, PartOfSpeech  # Snippet
 from memo.permissions import IsOwnerOrReadOnly
 from memo.serializers import WordSerializer, UserSerializer  # SnippetSerializer, GroupSerializer
@@ -22,6 +22,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
+
+from memo.tasks.word_transfer import WordTransfer
 
 
 # def wording(request):
@@ -56,16 +58,17 @@ class WordDetail(APIView):
         word = self.get_object(pk)
         word.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
-    
+
+
 class Wording(APIView):
-    filter_backends = [WordFilter]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = WordFilter2
     
     def get(self, request):
         queryset = WordCards.objects.all()
         for beckend_instance in self.filter_backends:
             queryset = beckend_instance().filter_queryset(request=request, queryset=queryset, view=self)
-            
+        
         serializer = WordSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
@@ -75,7 +78,7 @@ class Wording(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class UserView(APIView):
     def get(self, request):
@@ -89,6 +92,68 @@ class UserView(APIView):
         return JsonResponse(serializer.data, safe=False)
         # return Response(*usernames, status=status.HTTP_200_OK)
 
+
+class UploadWordsView(APIView):
+    def get(self, request):
+        return Response({"message": "Send me a link to the file with the words "
+                                    "or empty request (for using default file)",
+                         "Expected format": "key='link': value=<folder link>"},
+                        status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        link = request.data.get('link')  # ссылка из запроса
+        message = "Words from the main link were used"
+        if link:  # если ссылка дана, то сообщение уже другое - со ссылкой
+            message = f"Words from the new link: {link}"
+        
+        # Обрабатываю файл через WordTransfer
+        word_transfer = WordTransfer(link_source=link)  # экземпляр парсера заряженный ссылкой
+        words = word_transfer.parser()  # парсер возвращает список слов
+
+        created_words = []
+        existing_words = []
+    
+        for word in words:
+            if not WordCards.objects.filter(
+                word=word['word'],
+                translation=word['translation'],
+                example=word['example']
+            ).exists():
+                serializer = WordSerializer(data=word)
+                if serializer.is_valid():
+                    instance = serializer.save()
+                    created_words.append(instance)
+            else:
+                existing_words.append(word['word'])
+                
+        return Response({
+            "message": message,
+            "created_words": [str(word) for word in created_words],
+            "existing_words": [str(word) for word in existing_words],
+        }, status=status.HTTP_201_CREATED)
+    
+    # def post(self, request, *args, **kwargs):
+    #     link = request.data.get('link')
+    #     print(request.data.get('link'))
+    #     message = "Words from the main link were used"
+    #     if link:
+    #         from pathlib import Path
+    #         normalized_path = Path(link)
+    #         print(normalized_path)
+    #         message = f"Words from the new link: {normalized_path}"
+    #
+    #     # Обрабатываю файл через WordTransfer
+    #     word_transfer = WordTransfer(link_source=link)
+    #     words = word_transfer.parser()
+    #     res = WordSerializer(data=words, many=True)
+    #     print(res.is_valid())
+    #     print(res.validated_data)
+    #     # res.save()
+    #
+    #     return Response({"message": message}, status=200)
+
+# {"link": "D:\Obsidian_notes\jaime\English\Vocab_Memolexi — копия.md"}
+# {"link": "D:\\Obsidian_notes\\jaime\\English\\Vocab_Memolexi — копия.md"}
 
 # class UserView(viewsets.ModelViewSet):
 #     """

@@ -34,6 +34,7 @@ urlpatterns = ([
     path('words/', views.Wording.as_view()),
     path('words/<int:pk>/', views.WordDetail.as_view(), name='words-detail'),
     path('users/', views.UserView.as_view()),
+    path('uw/', views.UploadWordsView.as_view()),  # api/upload-words
     # path('words/', views.wording)
 ])  # + router.urls)
 

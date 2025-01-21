@@ -50,10 +50,12 @@ class WordCards(models.Model):
     word = models.CharField(max_length=255, validators=[validate_not_empty])
     translation = models.TextField(max_length=3000, blank=True, null=True)
     example = models.TextField(max_length=255, blank=True, null=True)
+    source = models.CharField(max_length=300, blank=True, null=True)
+    reverso_url = models.CharField(max_length=300, blank=True, null=True)
     picture = models.ImageField(blank=True, null=True)
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, related_name='words')
     time_create = models.DateTimeField(auto_now_add=True)
-    part_of_speech = models.ForeignKey('PartOfSpeech', blank=True, on_delete=models.PROTECT, related_name='words')
+    part_of_speech = models.ForeignKey('PartOfSpeech', blank=True, null=True, on_delete=models.PROTECT, related_name='words')
     
     def __str__(self):
         return self.word

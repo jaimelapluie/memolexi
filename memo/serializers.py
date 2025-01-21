@@ -156,4 +156,19 @@ class UserSerializer(serializers.ModelSerializer):
 class WordSerializer(serializers.ModelSerializer):
     class Meta:
         model = WordCards
-        fields = ["id", "word", "translation", "example", "picture", "time_create", "author", "part_of_speech"]
+        fields = ["id", "word", "translation", "example", "source", "reverso_url", "picture", "time_create", "author", "part_of_speech"]
+
+
+class SimpleTransferSerializer(serializers.Serializer):
+    word = serializers.CharField(max_length=255)
+    translation = serializers.CharField()
+    example = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    picture = serializers.ImageField(required=False, allow_null=True)
+    author = serializers.CharField(required=False)
+    # time_create = serializers.DateTimeField()
+    source = serializers.CharField(required=False, allow_null=True)
+    reverso_url = serializers.CharField(required=False, allow_null=True)
+    # part_of_speech = serializers.CharField()
+
+
+f = {'word': 'mention', 'translation': 'упомянуть', 'example': 'Other notab', 'source': '[youtube.com]', 'reverso_url': 'reverso'}

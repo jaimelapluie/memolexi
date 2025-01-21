@@ -1,16 +1,30 @@
+import django_filters
 from rest_framework.filters import BaseFilterBackend
 
+from memo.models import WordCards
 
-class WordFilter(BaseFilterBackend):
+
+class WordFilter2(django_filters.FilterSet):
+    author = django_filters.NumberFilter(field_name='author')
+    part_of_speech = django_filters.CharFilter(field_name='part_of_speech__part_of_speech')
+    word = django_filters.CharFilter(field_name='word')
+    word_starts = django_filters.CharFilter(field_name='word', lookup_expr='startswith')  # istartswith
+    
+    class Meta:
+        model = WordCards
+        fields = ['author', 'part_of_speech', 'word',]  #  ['time_create']  #
+
+
+class WordFilter1(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         print('def filter_queryset')
         params = request.query_params.dict()
         author = params.get('author')
         part_of_speech = params.get('part_of_speech')
         word = params.get('word')
-        starts = params.get('starts')
+        word_starts = params.get('word_starts')
         
-        if not any([author, part_of_speech, word, starts]):
+        if not any([author, part_of_speech, word, word_starts]):
             return queryset
         
         if author:
@@ -25,8 +39,9 @@ class WordFilter(BaseFilterBackend):
         if word:
             queryset = queryset.filter(word=word)
             
-        if starts:
-            queryset = queryset.filter(starts=starts)
+        if word_starts:
+            queryset = queryset.filter(word__startswith=word_starts)
             
         return queryset
+
     
