@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from debug_toolbar.toolbar import debug_toolbar_urls
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
@@ -30,13 +31,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 # router.register(r'parts-of-speech', views.PartOfSpeechViewSet, basename='partofspeech')  # Новый маршрут
 
 
-urlpatterns = ([
+urlpatterns = [
     path('words/', views.Wording.as_view()),
     path('words/<int:pk>/', views.WordDetail.as_view(), name='words-detail'),
     path('users/', views.UserView.as_view()),
     path('uw/', views.UploadWordsView.as_view()),  # api/upload-words
     # path('words/', views.wording)
-])  # + router.urls)
+] + debug_toolbar_urls()  # + router.urls)
 
 
 """Второй вариант"""

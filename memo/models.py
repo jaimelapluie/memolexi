@@ -55,10 +55,14 @@ class WordCards(models.Model):
     picture = models.ImageField(blank=True, null=True)
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, related_name='words')
     time_create = models.DateTimeField(auto_now_add=True)
-    part_of_speech = models.ForeignKey('PartOfSpeech', blank=True, null=True, on_delete=models.PROTECT, related_name='words')
+    part_of_speech = models.ForeignKey('PartOfSpeech', blank=True, null=True, on_delete=models.PROTECT,
+                                       related_name='words')
     
     def __str__(self):
+        # print(self, type(self), self.word)
         return self.word
+    # from memo.views import WordCards as wc
+    # q = wc.objects.all()
     
     class Meta:
         ordering = ['-time_create']
@@ -66,30 +70,31 @@ class WordCards(models.Model):
         verbose_name_plural = "Карточки слов"
 
 
-class WordCardsTopic(models.Model):
-    word_card = models.ForeignKey('WordCards', on_delete=models.CASCADE, related_name='word_topics')
-    topics = models.ForeignKey('Topic', on_delete=models.CASCADE, blank=True, related_name='word_topics')
+class WordCardsList(models.Model):
+    word_card = models.ForeignKey('WordCards', on_delete=models.CASCADE, related_name='wordcards_links')
+    word_lists = models.ForeignKey('WordList', on_delete=models.CASCADE, blank=True, default=None, null=True,
+                                   related_name='wordlists_links')
     added_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         # return f"{self.word_card.word} —> {self.topic.name}"
-        return f"{self.word_card} —> {self.topics}"
+        return f"{self.word_card} —> {self.word_lists}"
     
     class Meta:
-        verbose_name = "Связь карточки и темы"
-        verbose_name_plural = "Связь карточек и тем"
+        verbose_name = "Связь карточки и списка со словами"
+        verbose_name_plural = "Связь карточек и списков со словами"
     
     
-class Topic(models.Model):
+class WordList(models.Model):
     name = models.CharField(max_length=255, validators=[validate_not_empty])
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, related_name='topics')
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, related_name='word_lists')
 
     def __str__(self):
         return f"{self.name} created by {self.author}"
 
     class Meta:
-        verbose_name = "Тема"
-        verbose_name_plural = "Темы"
+        verbose_name = "Список слов"
+        verbose_name_plural = "Списки слов"
         unique_together = ('name', 'author')
         
         

@@ -1,14 +1,17 @@
 from typing import Any
 
 from django.contrib.auth.models import Group, User
+from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, serializers
 from rest_framework.exceptions import NotFound
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 
-from memo.filters import WordFilter1, WordFilter2
-from memo.models import WordCards, PartOfSpeech  # Snippet
+from memo.filters import WordFilter1, WordFilter2, CustomOrderingFilter
+from memo.models import WordCards, PartOfSpeech, WordCardsList  # Snippet
+from memo.paginations import CustomPageNumberPagination, CastomLimitOffsetPagination
 from memo.permissions import IsOwnerOrReadOnly
 from memo.serializers import WordSerializer, UserSerializer  # SnippetSerializer, GroupSerializer
 from django.http import JsonResponse, Http404
@@ -23,6 +26,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 
+from memo.services import WordService
 from memo.tasks.word_transfer import WordTransfer
 
 
@@ -61,22 +65,64 @@ class WordDetail(APIView):
 
 
 class Wording(APIView):
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = WordFilter2
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_class = WordFilter2
+    
+    # filter_backends = [WordFilter1, CustomOrderingFilter]
+    filter_backends = [CustomOrderingFilter]
+    ordering_fields = ['word', 'translation', 'time_create', 'length']
+    
+    pagination_class = CastomLimitOffsetPagination  # CustomPageNumberPagination
     
     def get(self, request):
-        queryset = WordCards.objects.all()
+        # queryset = (WordCards.objects
+        #             .select_related('part_of_speech')
+        #             .prefetch_related('wordcards_links__word_lists')
+        #             .all())
+        
+        queryset = (
+            WordCards.objects
+            .select_related('part_of_speech')
+            .prefetch_related(
+                Prefetch(
+                    'wordcards_links',
+                    queryset=WordCardsList.objects.select_related('word_lists').only('word_lists__name',
+                                                                                     'word_lists__author')
+                )
+            )
+            .all()
+        )
+        
+        # Применяем фильтры
         for beckend_instance in self.filter_backends:
             queryset = beckend_instance().filter_queryset(request=request, queryset=queryset, view=self)
         
-        serializer = WordSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # Применяем пагинацию
+        paginator = self.pagination_class()
+        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        
+        serializer = WordSerializer(paginated_queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)  # Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, format=None):
+        print(request.data)
         serializer = WordSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                # Если записи нет, создаём новую
+                word, created = WordService.create_word_with_master_list(serializer.validated_data, request.user)
+            except Exception as e:
+                return Response({"error_from Wording.post": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if created:
+                print('wording/post зашел')
+                return Response(WordSerializer(word).data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(
+                    {'message': f'{serializer.validated_data.get("word")} is already exists'},
+                    status=status.HTTP_409_CONFLICT
+                )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -95,9 +141,9 @@ class UserView(APIView):
 
 class UploadWordsView(APIView):
     def get(self, request):
-        return Response({"message": "Send me a link to the file with the words "
-                                    "or empty request (for using default file)",
-                         "Expected format": "key='link': value=<folder link>"},
+        return Response({
+            "info": "Send me a link to the file with the words or empty request (for using default file)",
+            "Expected format": " 'link': '<folder link>' "},
                         status=status.HTTP_200_OK)
     
     def post(self, request, *args, **kwargs):
@@ -114,18 +160,27 @@ class UploadWordsView(APIView):
         existing_words = []
     
         for word in words:
-            if not WordCards.objects.filter(
-                word=word['word'],
-                translation=word['translation'],
-                example=word['example']
-            ).exists():
-                serializer = WordSerializer(data=word)
-                if serializer.is_valid():
-                    instance = serializer.save()
-                    created_words.append(instance)
-            else:
-                existing_words.append(word['word'])
-                
+            serializer = WordSerializer(data=word)
+            print('UploadWordsView', word)
+            if serializer.is_valid():
+                try:
+                    # Если записи нет, создаём новую
+                    print('!!2')
+                    print('loop1', serializer)
+                    # print('loop2', serializer.data)
+                    print('loop2', word, type(word))
+                    print('!!3')
+                    instance, created = WordService.create_word_with_master_list(word, request.user)
+                    print('>', instance, created)
+                except Exception as e:
+                    return Response({"error_from Wording.post": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+ 
+                if created:
+                    print(type(instance))
+                    created_words.append(instance.word)
+                else:
+                    existing_words.append(instance.word)
+
         return Response({
             "message": message,
             "created_words": [str(word) for word in created_words],
@@ -151,6 +206,8 @@ class UploadWordsView(APIView):
     #     # res.save()
     #
     #     return Response({"message": message}, status=200)
+
+
 
 # {"link": "D:\Obsidian_notes\jaime\English\Vocab_Memolexi — копия.md"}
 # {"link": "D:\\Obsidian_notes\\jaime\\English\\Vocab_Memolexi — копия.md"}

@@ -1,6 +1,6 @@
 # from memo.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 from django.contrib.auth.models import Group, User
-from memo.models import WordCards
+from memo.models import WordCards, PartOfSpeech, WordCardsList, WordList
 from rest_framework import serializers
 
 import os
@@ -147,28 +147,63 @@ class WordSerializer(serializers.HyperlinkedModelSerializer):  #  ModelSerialize
         """
 
 
-class UserSerializer(serializers.ModelSerializer):
+class WordListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ["id", "username",]
+        model = WordList
+        fields = ["name", "author"]
+
+
+class WordCardsListSerializer(serializers.ModelSerializer):
+    word_lists = WordListSerializer()
+    
+    class Meta:
+        model = WordCardsList
+        fields = ["word_lists"]
 
 
 class WordSerializer(serializers.ModelSerializer):
+    part_of_speech = serializers.CharField(source='part_of_speech.part_of_speech', read_only=True, required=False)
+    # word_lists = serializers.ListField(
+    #     child=serializers.CharField(),
+    #     source='wordcards_links.values_list("word_lists__name", flat=True)',
+    #     read_only=True
+    # )
+    word_lists = serializers.SerializerMethodField()
+    # word_lists = WordCardsListSerializer(many=True, required=False)  # прежний вариант работал
+    
     class Meta:
         model = WordCards
-        fields = ["id", "word", "translation", "example", "source", "reverso_url", "picture", "time_create", "author", "part_of_speech"]
+        fields = ["id", "word", "translation", "example", "source", "reverso_url", "picture", "time_create",
+                  "author", "part_of_speech", "word_lists"]
+        read_only_fields = ["word_lists"]  # Указываем, что поле только для чтения
+    
+    def get_word_lists(self, obj):
+        print('>get_word_lists>', type(obj), obj)
+        return list(obj.wordcards_links.values_list("word_lists__name", flat=True))
 
 
-class SimpleTransferSerializer(serializers.Serializer):
-    word = serializers.CharField(max_length=255)
-    translation = serializers.CharField()
-    example = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    picture = serializers.ImageField(required=False, allow_null=True)
-    author = serializers.CharField(required=False)
-    # time_create = serializers.DateTimeField()
-    source = serializers.CharField(required=False, allow_null=True)
-    reverso_url = serializers.CharField(required=False, allow_null=True)
-    # part_of_speech = serializers.CharField()
+class PartOfSpeechSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PartOfSpeech
+        fields = ["part_of_speech"]
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "username", ]
+        
+        
+# class SimpleTransferSerializer(serializers.Serializer):
+#     word = serializers.CharField(max_length=255)
+#     translation = serializers.CharField()
+#     example = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+#     picture = serializers.ImageField(required=False, allow_null=True)
+#     author = serializers.CharField(required=False)
+#     # time_create = serializers.DateTimeField()
+#     source = serializers.CharField(required=False, allow_null=True)
+#     reverso_url = serializers.CharField(required=False, allow_null=True)
+#     # part_of_speech = serializers.CharField()
 
 
 f = {'word': 'mention', 'translation': 'упомянуть', 'example': 'Other notab', 'source': '[youtube.com]', 'reverso_url': 'reverso'}

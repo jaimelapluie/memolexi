@@ -17,8 +17,7 @@
 # import django
 #
 # django.setup()  # This line is crucial
-
-from memo.serializers import WordSerializer, SimpleTransferSerializer
+# from memo.serializers import WordSerializer, SimpleTransferSerializer
 
 
 class WordTransfer:
@@ -60,7 +59,7 @@ class WordTransfer:
         return word_data
 
     def parser(self) -> list:
-        """Основной метод парсинга."""
+        """Основной метод парсинга"""
         lines = self._read_file()
         result = []
         snippet = []
@@ -72,7 +71,7 @@ class WordTransfer:
                 if snippet:
                     result.append(self._parse_snippet(snippet))
                     snippet = []
-
+        print('WordTransfer/parser', type(result), result)
         return result
 
 
