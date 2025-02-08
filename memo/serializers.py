@@ -169,7 +169,7 @@ class WordSerializer(serializers.ModelSerializer):
     #     read_only=True
     # )
     word_lists = serializers.SerializerMethodField()
-    # word_lists = WordCardsListSerializer(many=True, required=False)  # прежний вариант работал
+    author = serializers.CharField(source='author.username', read_only=True)
     
     class Meta:
         model = WordCards
@@ -180,8 +180,8 @@ class WordSerializer(serializers.ModelSerializer):
     def get_word_lists(self, obj):
         print('>get_word_lists>', type(obj), obj)
         return list(obj.wordcards_links.values_list("word_lists__name", flat=True))
-
-
+    
+    
 class PartOfSpeechSerializer(serializers.ModelSerializer):
     class Meta:
         model = PartOfSpeech

@@ -5,9 +5,12 @@ from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, serializers
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.exceptions import NotFound
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from memo.filters import WordFilter1, WordFilter2, CustomOrderingFilter
 from memo.models import WordCards, PartOfSpeech, WordCardsList  # Snippet
@@ -16,7 +19,7 @@ from memo.permissions import IsOwnerOrReadOnly
 from memo.serializers import WordSerializer, UserSerializer  # SnippetSerializer, GroupSerializer
 from django.http import JsonResponse, Http404
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes
 
 from rest_framework.reverse import reverse
 from rest_framework import renderers
@@ -37,6 +40,9 @@ from memo.tasks.word_transfer import WordTransfer
 
 
 class WordDetail(APIView):
+    permission_classes = [IsAuthenticated]  # [permissions.IsAuthenticatedOrReadOnly]
+    authentication_classes = [JWTAuthentication, SessionAuthentication, BasicAuthentication]
+    
     def get_object(self, pk):
         try:
             return WordCards.objects.get(id=pk)
@@ -64,6 +70,7 @@ class WordDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# @authentication_classes([SessionAuthentication, ])  # BasicAuthentication
 class Wording(APIView):
     # filter_backends = [DjangoFilterBackend]
     # filterset_class = WordFilter2
@@ -74,12 +81,15 @@ class Wording(APIView):
     
     pagination_class = CastomLimitOffsetPagination  # CustomPageNumberPagination
     
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]  # [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]  # [JWTAuthentication,]
+    
     def get(self, request):
         # queryset = (WordCards.objects
         #             .select_related('part_of_speech')
         #             .prefetch_related('wordcards_links__word_lists')
         #             .all())
-        
+        print(request.user)
         queryset = (
             WordCards.objects
             .select_related('part_of_speech')

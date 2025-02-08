@@ -34,6 +34,7 @@ class WordService:
         # Создаём или получаем master_list с указанным автором
         master_list, _ = WordList.objects.get_or_create(
             name='master_list',
+            author=author,
             defaults={"author": author}
         )
         print('master_list', master_list, _)

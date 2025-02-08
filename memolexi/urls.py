@@ -32,11 +32,16 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 urlpatterns = [
+    path('', include('users.urls')),
+    
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api-auth/', include('rest_framework.urls')),
+    
     path('words/', views.Wording.as_view()),
     path('words/<int:pk>/', views.WordDetail.as_view(), name='words-detail'),
     path('users/', views.UserView.as_view()),
     path('uw/', views.UploadWordsView.as_view()),  # api/upload-words
-    # path('words/', views.wording)
 ] + debug_toolbar_urls()  # + router.urls)
 
 
