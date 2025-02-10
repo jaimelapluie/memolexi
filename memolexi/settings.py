@@ -45,6 +45,9 @@ INSTALLED_APPS = [
 
 LOGOUT_REDIRECT_URL = '/login/'
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# AUTH_USER_MODEL = 'User'
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
