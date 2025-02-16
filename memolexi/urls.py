@@ -27,21 +27,22 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 # router = DefaultRouter()
 # router.register(r'words', views.Wording, basename='wordcards')  # Обратите внимание на имя
-# router.register(r'users', views.UserView, basename='user')
+# router.register(r'users', views.UserListView, basename='user')
 # router.register(r'parts-of-speech', views.PartOfSpeechViewSet, basename='partofspeech')  # Новый маршрут
 
 
 urlpatterns = [
     path('', include('users.urls')),
     
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api-auth/', include('rest_framework.urls')),
+    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/', include('rest_framework.urls')),
     
-    path('words/', views.Wording.as_view()),
+    path('users/', views.UserListView.as_view(), name='users-list'),
+    path('words/', views.WordListView.as_view(), name='words-list'),
     path('words/<int:pk>/', views.WordDetail.as_view(), name='words-detail'),
-    path('users/', views.UserView.as_view()),
-    path('uw/', views.UploadWordsView.as_view()),  # api/upload-words
+    path('words/upload/', views.UploadWordsView.as_view()),  # uw/  api/upload-words
+    path('srs/', views.SRSessionView.as_view(), name='spaced-repetition-system'),
 ] + debug_toolbar_urls()  # + router.urls)
 
 

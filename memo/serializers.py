@@ -4,56 +4,6 @@ from memo.models import WordCards, PartOfSpeech, WordCardsList, WordList
 from rest_framework import serializers
 
 import os
-"""from rest_framework import serializers
-from datetime import datetime
-from django.conf import settings
-
-settings.configure(
-    INSTALLED_APPS=[
-        'rest_framework',
-    ]
-)
-
-
-class Comment:
-    def __init__(self, email, content, created=None):
-        self.email = email
-        self.content = content
-        self.created = created or datetime.now()
-
-comment = Comment(email='leila@example.com', content='foo bar')
-
-
-class CommentSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    content = serializers.CharField(max_length=200)
-    created = serializers.DateTimeField()
-    
-
-serializer = CommentSerializer(comment)
-a = serializer.data
-print('A', type(a), a)
-
-from rest_framework.renderers import JSONRenderer
-
-json = JSONRenderer().render(serializer.data)
-print('B', type(json), json)
-
-
-import io
-from rest_framework.parsers import JSONParser
-
-stream = io.BytesIO(json)
-data = JSONParser().parse(stream)
-
-
-serializer = CommentSerializer(data=data)
-print('C', serializer.is_valid())
-# True
-res = serializer.validated_data
-print('D', type(res))
-print('E', res)"""
-
 
 # class SnippetSerializer(serializers.ModelSerializer):
 #     owner = serializers.ReadOnlyField(source='owner.username')
@@ -192,18 +142,16 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", ]
-        
-        
-# class SimpleTransferSerializer(serializers.Serializer):
-#     word = serializers.CharField(max_length=255)
-#     translation = serializers.CharField()
-#     example = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-#     picture = serializers.ImageField(required=False, allow_null=True)
-#     author = serializers.CharField(required=False)
-#     # time_create = serializers.DateTimeField()
-#     source = serializers.CharField(required=False, allow_null=True)
-#     reverso_url = serializers.CharField(required=False, allow_null=True)
-#     # part_of_speech = serializers.CharField()
+       
+ 
+class WordReviewSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    quality = serializers.IntegerField(required=True, min_value=0, max_value=5)
 
-
-f = {'word': 'mention', 'translation': 'упомянуть', 'example': 'Other notab', 'source': '[youtube.com]', 'reverso_url': 'reverso'}
+# class WordReviewSerializer(serializers.ModelSerializer):
+#     quality = serializers.IntegerField(write_only=True, min_value=0, max_value=5)
+#
+#     class Meta:
+#         model = WordCards
+#         fields = ["id", "word", "translation", "quality"]
+        

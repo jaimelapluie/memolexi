@@ -2,6 +2,8 @@ from django.db import models
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 from django.core.exceptions import ValidationError
+from datetime import timedelta, datetime
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
 from pygments import highlight
@@ -58,6 +60,12 @@ class WordCards(models.Model):
     part_of_speech = models.ForeignKey('PartOfSpeech', blank=True, null=True, on_delete=models.PROTECT,
                                        related_name='words')
     
+    # Spaced Repetition System Params
+    interval_days = models.PositiveIntegerField(default=1)
+    repetition_level = models.PositiveIntegerField(default=1)
+    easiness_factor = models.FloatField(default=2.5)
+    next_review = models.DateField(default=datetime.today)
+    
     def __str__(self):
         # print(self, type(self), self.word)
         return self.word
@@ -69,6 +77,23 @@ class WordCards(models.Model):
         verbose_name = "Карточка слова"
         verbose_name_plural = "Карточки слов"
 
+
+class ReviewHistory(models.Model):
+    word_card = models.ForeignKey("WordCards", on_delete=models.CASCADE, related_name="reviews")
+    reviewed_at = models.DateTimeField(auto_now_add=True)
+    quality = models.IntegerField()  # Оценка от 0 до 5
+    interval_days = models.IntegerField()  # Интервал после ответа
+    easiness_factor = models.FloatField()  # EF после ответа
+    repetition_level = models.PositiveIntegerField()
+    
+    def __str__(self):
+        return f"{self.word_card.word} - Оценка: {self.quality}"
+    
+    class Meta:
+        ordering = ['-reviewed_at']
+        verbose_name = "История повторения"
+        verbose_name_plural = "История повторений"
+        
 
 class WordCardsList(models.Model):
     word_card = models.ForeignKey('WordCards', on_delete=models.CASCADE, related_name='wordcards_links')

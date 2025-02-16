@@ -13,10 +13,10 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from memo.filters import WordFilter1, WordFilter2, CustomOrderingFilter
-from memo.models import WordCards, PartOfSpeech, WordCardsList  # Snippet
+from memo.models import WordCards, PartOfSpeech, WordCardsList, ReviewHistory  # Snippet
 from memo.paginations import CustomPageNumberPagination, CastomLimitOffsetPagination
 from memo.permissions import IsOwnerOrReadOnly
-from memo.serializers import WordSerializer, UserSerializer  # SnippetSerializer, GroupSerializer
+from memo.serializers import WordSerializer, UserSerializer, WordReviewSerializer  # SnippetSerializer, GroupSerializer
 from django.http import JsonResponse, Http404
 
 from rest_framework.decorators import api_view, authentication_classes
@@ -29,14 +29,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 
-from memo.services import WordService
+from memo.services import WordService, SM2Algorithm
 from memo.tasks.word_transfer import WordTransfer
-
-
-# def wording(request):
-#     queryset = WordCards.objects.all()
-#     serializer = WordSerializer(queryset, many=True)
-#     return JsonResponse(serializer.data, safe=False)
+from datetime import timedelta, datetime
+from django.utils.timezone import now
 
 
 class WordDetail(APIView):
@@ -71,7 +67,7 @@ class WordDetail(APIView):
 
 
 # @authentication_classes([SessionAuthentication, ])  # BasicAuthentication
-class Wording(APIView):
+class WordListView(APIView):
     # filter_backends = [DjangoFilterBackend]
     # filterset_class = WordFilter2
     
@@ -82,7 +78,7 @@ class Wording(APIView):
     pagination_class = CastomLimitOffsetPagination  # CustomPageNumberPagination
     
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]  # [IsAuthenticated]
-    authentication_classes = [SessionAuthentication, BasicAuthentication]  # [JWTAuthentication,]
+    authentication_classes = [JWTAuthentication, SessionAuthentication, BasicAuthentication]
     
     def get(self, request):
         # queryset = (WordCards.objects
@@ -123,7 +119,7 @@ class Wording(APIView):
                 # Если записи нет, создаём новую
                 word, created = WordService.create_word_with_master_list(serializer.validated_data, request.user)
             except Exception as e:
-                return Response({"error_from Wording.post": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error_from WordListView.post": str(e)}, status=status.HTTP_400_BAD_REQUEST)
             
             if created:
                 print('wording/post зашел')
@@ -136,7 +132,7 @@ class Wording(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserView(APIView):
+class UserListView(APIView):
     def get(self, request):
         usernames = User.objects.all()
         serializer = UserSerializer(usernames, many=True)
@@ -183,7 +179,7 @@ class UploadWordsView(APIView):
                     instance, created = WordService.create_word_with_master_list(word, request.user)
                     print('>', instance, created)
                 except Exception as e:
-                    return Response({"error_from Wording.post": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"error_from WordListView.post": str(e)}, status=status.HTTP_400_BAD_REQUEST)
  
                 if created:
                     print(type(instance))
@@ -196,40 +192,77 @@ class UploadWordsView(APIView):
             "created_words": [str(word) for word in created_words],
             "existing_words": [str(word) for word in existing_words],
         }, status=status.HTTP_201_CREATED)
+
+
+class SRSessionView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication, SessionAuthentication, BasicAuthentication]
     
-    # def post(self, request, *args, **kwargs):
-    #     link = request.data.get('link')
-    #     print(request.data.get('link'))
-    #     message = "Words from the main link were used"
-    #     if link:
-    #         from pathlib import Path
-    #         normalized_path = Path(link)
-    #         print(normalized_path)
-    #         message = f"Words from the new link: {normalized_path}"
-    #
-    #     # Обрабатываю файл через WordTransfer
-    #     word_transfer = WordTransfer(link_source=link)
-    #     words = word_transfer.parser()
-    #     res = WordSerializer(data=words, many=True)
-    #     print(res.is_valid())
-    #     print(res.validated_data)
-    #     # res.save()
-    #
-    #     return Response({"message": message}, status=200)
+    def get(self, request):
+        """
+        Возвращает список слов, которые нужно повторить
+        """
+        queryset = (WordCards.objects.select_related('author')
+                    .filter(author=request.user, next_review__lte=now())
+                    .order_by("next_review"))[:10]
+        serializer = WordSerializer(queryset, many=True)
+        return Response({'words': serializer.data}, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        """
+        Обновляет интервалы повторения на основе оценок
+        Пример запроса: {"id": 1, "quality": 4}
+        [
+            {"id": 4, "quality": 4},
+            {"id": 5, "quality": 2},
+            {"id": 6, "quality": 5}
+        ]
+        """
+        serializer = WordReviewSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            print(serializer.validated_data)
+            
+            word_ids = [item['id'] for item in serializer.validated_data]
+            quality_map = {item['id']: item['quality'] for item in serializer.validated_data}
+            
+            words = WordCards.objects.filter(pk__in=word_ids, author=request.user)
+            if not words.exists():
+                return Response({'error': f'No valid words found ({word_ids})'},
+                                status=status.HTTP_400_BAD_REQUEST)
+            
+            review_history = []
+            for word in words:
+                quality = quality_map.get(word.id)
+                SM2Algorithm.calculate_next_review(word, quality)
+                review_history.append(
+                    ReviewHistory(
+                        word_card=word,
+                        reviewed_at=now(),
+                        quality=quality,
+                        interval_days=word.interval_days,
+                        easiness_factor=word.easiness_factor,
+                        repetition_level=word.repetition_level
+                    )
+                )
+            
+            WordCards.objects.bulk_update(
+                words, ['next_review', 'interval_days', 'repetition_level', 'easiness_factor'])
+            ReviewHistory.objects.bulk_create(review_history)
+            
+            return Response({"message": "Words updated"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
+    
 # {"link": "D:\Obsidian_notes\jaime\English\Vocab_Memolexi — копия.md"}
 # {"link": "D:\\Obsidian_notes\\jaime\\English\\Vocab_Memolexi — копия.md"}
 
-# class UserView(viewsets.ModelViewSet):
+# class UserListView(viewsets.ModelViewSet):
 #     """
 #     API endpoint that allows groups to be viewed or edited.
 #     """
 #     queryset = User.objects.all()
 #     serializer_class = UserSerializer
 #
-
 
 #####################################
 # class UserViewSet(viewsets.ReadOnlyModelViewSet):

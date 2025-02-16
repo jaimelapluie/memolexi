@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 
 from memo.models import WordCards, WordList, WordCardsList
+from datetime import timedelta, datetime
 
 
 User = get_user_model()
@@ -43,4 +44,46 @@ class WordService:
         WordCardsList.objects.get_or_create(word_card=word, word_lists=master_list)
         print('Сервисный', word, created)
         return word, created
+
+
+class SM2Algorithm:
+    MIN_Easiness_Factor = 1.3  # Минимальный коэффициент легкости
     
+    @staticmethod
+    def calculate_next_review(word_instance, quality):
+        """
+        Обновляет интервалы повторения слова по алгоритму SM-2.
+
+        :param word_instance: экземпляр модели WordCards
+        :param quality: оценка от 0 до 5
+        
+        interval_days = models.PositiveIntegerField(default=1)
+        repetition_level = models.PositiveIntegerField(default=1)
+        easiness_factor = models.FloatField(default=2.5)
+        next_review = models.DateField(default=datetime.today)
+        """
+        
+        easiness_factor = max(
+            SM2Algorithm.MIN_Easiness_Factor,
+            word_instance.easiness_factor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
+        )
+        
+        if quality < 3:
+            repetition_level = 1
+            interval_days = 1
+        else:
+            if word_instance.repetition_level == 1:
+                interval_days = 1
+            elif word_instance.repetition_level == 2:
+                interval_days = 6
+            else:
+                interval_days = round(word_instance.interval_days * easiness_factor)
+            repetition_level = word_instance.repetition_level + 1
+        
+        word_instance.interval_days = interval_days
+        word_instance.repetition_level = repetition_level
+        word_instance.easiness_factor = easiness_factor
+        word_instance.next_review = datetime.now().date() + timedelta(days=interval_days)
+        
+        # word_instance.save()
+        
