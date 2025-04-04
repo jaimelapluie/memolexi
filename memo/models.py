@@ -10,6 +10,9 @@ from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 
+# from memo.services import SM2Algorithm
+# SM2Algorithm
+
 # LEXERS = [item for item in get_all_lexers() if item[1]]
 # LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
 # STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
@@ -76,7 +79,11 @@ class WordCards(models.Model):
         ordering = ['-time_create']
         verbose_name = "Карточка слова"
         verbose_name_plural = "Карточки слов"
-
+    
+    def update_srs(self, instance, validated_data):
+        print(validated_data)
+        # SM2Algorithm.calculate_next_review(instance, validated_data['quality'])
+    
 
 class ReviewHistory(models.Model):
     word_card = models.ForeignKey("WordCards", on_delete=models.CASCADE, related_name="reviews")
