@@ -49,7 +49,7 @@ class WordFilter1(BaseFilterBackend):
 
 class CustomOrderingFilter(OrderingFilter):
     def filter_queryset(self, request, queryset, view):
-        print('A filter_queryset')
+        print('A. CustomOrderingFilter -> filter_queryset')
         """
         Переопределяю фильтрацию, чтобы прокинуть аннотацию для длины слова
         """
@@ -63,7 +63,7 @@ class CustomOrderingFilter(OrderingFilter):
         return super().filter_queryset(request, queryset, view)
     
     def get_ordering(self, request, queryset, view):
-        print('B get_ordering', view)
+        print('B. CustomOrderingFilter -> get_ordering', view)
         """
         Получает порядок сортировки из параметра запроса 'ordering'.
         Если параметр отсутствует, возвращает значение по умолчанию.
@@ -74,7 +74,7 @@ class CustomOrderingFilter(OrderingFilter):
         
         # Если параметр 'ordering' не передан, используем сортировку по умолчанию
         if not ordering:
-            return ['-time_create']  # Замените на поле по умолчанию для вашей модели
+            return ['-time_create']
         
         sanitized_ordering = []
         for field in ordering:

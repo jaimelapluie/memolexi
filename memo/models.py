@@ -6,6 +6,8 @@ from datetime import timedelta, datetime
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
+from memo import constants
+
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
@@ -80,10 +82,41 @@ class WordCards(models.Model):
         verbose_name = "Карточка слова"
         verbose_name_plural = "Карточки слов"
     
-    def update_srs(self, instance, validated_data):
-        print(validated_data)
-        # SM2Algorithm.calculate_next_review(instance, validated_data['quality'])
-    
+    def calculate_next_review(self, word_instance, quality):
+        """
+        Обновляет интервалы повторения слова по алгоритму SM-2.
+
+        :param word_instance: экземпляр модели WordCards
+        :param quality: оценка от 0 до 5
+
+        interval_days = models.PositiveIntegerField(default=1)
+        repetition_level = models.PositiveIntegerField(default=1)
+        easiness_factor = models.FloatField(default=2.5)
+        next_review = models.DateField(default=datetime.today)
+        """
+        
+        easiness_factor = max(
+            constants.MIN_Easiness_Factor,
+            word_instance.easiness_factor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
+        )
+        
+        if quality < 3:
+            repetition_level = 1
+            interval_days = 1
+        else:
+            if word_instance.repetition_level == 1:
+                interval_days = 1
+            elif word_instance.repetition_level == 2:
+                interval_days = 6
+            else:
+                interval_days = round(word_instance.interval_days * easiness_factor)
+            repetition_level = word_instance.repetition_level + 1
+        
+        word_instance.interval_days = interval_days
+        word_instance.repetition_level = repetition_level
+        word_instance.easiness_factor = easiness_factor
+        word_instance.next_review = datetime.now().date() + timedelta(days=interval_days)
+
 
 class ReviewHistory(models.Model):
     word_card = models.ForeignKey("WordCards", on_delete=models.CASCADE, related_name="reviews")

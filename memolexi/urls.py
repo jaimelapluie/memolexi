@@ -32,17 +32,18 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 urlpatterns = [
-    path('', include('users.urls')),
-    
-    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/', include('rest_framework.urls')),
     
     path('users/', views.UserListView.as_view(), name='users-list'),
-    path('words/', views.WordListView.as_view(), name='words-list'),
     path('words/<int:pk>/', views.WordDetail.as_view(), name='words-detail'),
     path('words/upload/', views.UploadWordsView.as_view()),  # uw/  api/upload-words
+    path('words/', views.WordListView.as_view(), name='words-list'),
+    
     path('srs/', views.SRSessionView.as_view(), name='spaced-repetition-system'),
+    
+    path('', include('users.urls')),
 ] + debug_toolbar_urls()  # + router.urls)
 
 

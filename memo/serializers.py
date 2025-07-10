@@ -1,8 +1,9 @@
 # from memo.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 from django.contrib.auth.models import Group, User
-from memo.models import WordCards, PartOfSpeech, WordCardsList, WordList
+from memo.models import WordCards, PartOfSpeech, WordCardsList, WordList, ReviewHistory
 from rest_framework import serializers
 
+from django.utils.timezone import now
 import os
 
 # class SnippetSerializer(serializers.ModelSerializer):
@@ -142,11 +143,61 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", ]
-       
- 
+
+
+class WordReviewListSerializer(serializers.ListSerializer):
+    def update(self, instance_list, validated_data):
+        instance_mapping = {instance.id: instance for instance in instance_list}
+        review_history = []
+        
+        for item in validated_data:  # ПОСМОТРЕТЬ КАК ВЫГЛЯДИТ validated_data  [{'id': 1, 'val': 5 }, { } ]
+            word = instance_mapping.get(item['id'])
+            quality = item['quality']
+            
+            if word:
+                word.calculate_next_review(word, quality)
+                
+                review_history.append(
+                    ReviewHistory(
+                        word_card=word,
+                        reviewed_at=now(),
+                        quality=quality,
+                        interval_days=word.interval_days,
+                        easiness_factor=word.easiness_factor,
+                        repetition_level=word.repetition_level
+                        
+                    )
+                )
+        
+        WordCards.objects.bulk_update(instance_list,
+                                      ['next_review', 'interval_days', 'easiness_factor', 'repetition_level'])
+        ReviewHistory.objects.bulk_create(review_history)
+        return instance_list
+    
+    def create(self, validated_data):
+        print('kek?')
+        return self
+    
+    
 class WordReviewSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
     quality = serializers.IntegerField(required=True, min_value=0, max_value=5)
+    
+    class Meta:
+        model = WordCards
+        fields = ['id', 'quality', ]
+        list_serializer_class = WordReviewListSerializer
+    
+    @classmethod
+    def many_init(cls, *args, **kwargs):
+        # 1. Создаем экземпляр сериализатора для одного объекта
+        # cls() = WordReviewSerializer()
+        kwargs['child'] = cls()
+        
+        # 2. Возвращаем экземпляр кастомного ListSerializer с этим child
+        # args и kwargs передаются в WordReviewListSerializer.__init__
+        return WordReviewListSerializer(*args, **kwargs)
+    
 
 # class WordReviewSerializer(serializers.ModelSerializer):
 #     quality = serializers.IntegerField(write_only=True, min_value=0, max_value=5)
@@ -154,4 +205,3 @@ class WordReviewSerializer(serializers.Serializer):
 #     class Meta:
 #         model = WordCards
 #         fields = ["id", "word", "translation", "quality"]
-        
