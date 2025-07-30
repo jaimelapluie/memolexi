@@ -10,9 +10,9 @@ from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from .serializers import RegisterSerializer, DeleteAccountSerializer, ChangePasswordSerializer, PasswordResetSerializer, \
-    SetNewPasswordSerializer
-from django.contrib.auth.models import User
+from .serializers import (RegisterSerializer, DeleteAccountSerializer, ChangePasswordSerializer,
+                          PasswordResetSerializer, SetNewPasswordSerializer)
+from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -20,7 +20,7 @@ from rest_framework import status
 
 
 class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
+    queryset = get_user_model().objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
     authentication_classes = [JWTAuthentication, SessionAuthentication, BasicAuthentication]
@@ -101,7 +101,7 @@ class PasswordResetConfirmView(APIView):
         try:
             uid = force_bytes(urlsafe_base64_decode(uidb64))  # Декодирую ID
             user = get_user_model().objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
             return Response({"error": "Неверный токен или пользователь не найден"}, status=status.HTTP_400_BAD_REQUEST)
             
         # Проверка токена

@@ -17,7 +17,9 @@ from memo.filters import WordFilter1, WordFilter2, CustomOrderingFilter
 from memo.models import WordCards, PartOfSpeech, WordCardsList, ReviewHistory  # Snippet
 from memo.paginations import CustomPageNumberPagination, CastomLimitOffsetPagination
 from memo.permissions import IsOwnerOrReadOnly
-from memo.serializers import WordSerializer, UserSerializer, WordReviewSerializer  # SnippetSerializer, GroupSerializer
+from memo.serializers import WordSerializer, WordReviewSerializer  # SnippetSerializer, GroupSerializer
+from users.serializers import UserSerializer
+
 from django.http import JsonResponse, Http404
 
 from rest_framework.decorators import api_view, authentication_classes
@@ -133,6 +135,33 @@ class WordListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class CheckUsernameView(APIView):
+    def get(self, request):
+        username = request.query_params.get('username')
+        if not username:
+            return Response({"error": "username isn't provided"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        exists = get_user_model().objects.filter(username=username).exists()
+        print(f'CheckUsernameView(APIView): проверка наличия if not username: {exists}')
+        return Response({"exists": exists})
+
+
+class CheckTelegramIdView(APIView):
+    def get(self, request):
+        telegram_id = request.query_params.get("telegram_id")
+        print(f"CheckTelegramIdView - telegram_id = {telegram_id}")
+        try:
+            finded_user_profile = get_user_model().objects.get(telegram_id=telegram_id)
+            print(finded_user_profile)
+            print(type(finded_user_profile))
+            serializer = UserSerializer(finded_user_profile)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        except get_user_model().DoesNotExist:
+            return Response({"service message": f"Пользователь с telegram_id {telegram_id} не был найден"},
+                            status=status.HTTP_404_NOT_FOUND)
+
+    
 class UserListView(APIView):
     def get(self, request):
         usernames = get_user_model().objects.all()
@@ -155,6 +184,7 @@ class UserListView(APIView):
                 print('serializer.validated_data', serializer.validated_data)
                 print('Проверка идеи', serializer.validated_data['username'])
                 # print('Проверка идеи2', get_user_model().objects.get(**serializer.validated_data))
+                # author, created = 'Author', False  # заглушка
                 author, created = get_user_model().objects.get_or_create(**serializer.validated_data)
                 print(author, created)
             except Exception as e:
@@ -174,6 +204,53 @@ class UserListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserDetailView(APIView):
+    # def get(self, request):
+    #     username = request.query_params.get('username')
+    #     telegram_id = request.query_params.get('telegram_id')
+    #
+    #     if not username and not telegram_id:
+    #         return Response({"service message": "Должен быть передан username или telegram_id"},
+    #                         status=status.HTTP_400_BAD_REQUEST)
+    #
+    #     try:
+    #         if username:
+    #             user = get_user_model().objects.get(username=username)
+    #         elif telegram_id:
+    #             user = get_user_model().objects.get(telegram_id=telegram_id)
+    #     except get_user_model().DoesNotExist:
+    #         return Response({"service message": "Пользователь не найден"},
+    #                         status=status.HTTP_404_NOT_FOUND)
+    #     serializer = UserSerializer(user)
+    #     return Response(serializer.data)
+        
+    def put(self, request):
+        print("UserDetailView -> put")
+        print(request)
+        print(request.query_params)
+        username = request.query_params.get('username')
+        telegram_id = request.query_params.get('telegram_id')
+        
+        if not username and not telegram_id:
+            return Response({"service message": "Должен быть передан username или telegram_id"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            if username:
+                user = get_user_model().objects.get(username=username)
+            elif telegram_id:
+                user = get_user_model().objects.get(telegram_id=telegram_id)
+        except get_user_model().DoesNotExist:
+            return Response({"service message": "Пользователь не найден"},
+                            status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
 class UploadWordsView(APIView):
     def get(self, request):
         return Response({

@@ -37,6 +37,10 @@ urlpatterns = [
     path('auth/', include('rest_framework.urls')),
     
     path('users/', views.UserListView.as_view(), name='users-list'),
+    path('users/update/', views.UserDetailView.as_view(), name='user-update'),
+    path('users/check_username/', views.CheckUsernameView.as_view(), name='username-check'),
+    path('users/check_telegram_id/', views.CheckTelegramIdView.as_view(), name='telegram_id-check'),
+    
     path('words/<int:pk>/', views.WordDetail.as_view(), name='words-detail'),
     path('words/upload/', views.UploadWordsView.as_view()),  # uw/  api/upload-words
     path('words/', views.WordListView.as_view(), name='words-list'),

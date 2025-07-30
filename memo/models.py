@@ -4,7 +4,6 @@ from pygments.styles import get_all_styles
 from django.core.exceptions import ValidationError
 from datetime import timedelta, datetime
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
 
 from memo import constants
 
@@ -52,7 +51,7 @@ def validate_not_empty(value):
     if not value.strip():
         raise ValidationError("Название не может быть пустым !")
     
-    
+
 class WordCards(models.Model):
     word = models.CharField(max_length=255, validators=[validate_not_empty])
     translation = models.TextField(max_length=3000, blank=True, null=True)
@@ -60,7 +59,7 @@ class WordCards(models.Model):
     source = models.CharField(max_length=300, blank=True, null=True)
     reverso_url = models.CharField(max_length=300, blank=True, null=True)
     picture = models.ImageField(blank=True, null=True)
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, related_name='words')
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, related_name='words')
     time_create = models.DateTimeField(auto_now_add=True)
     part_of_speech = models.ForeignKey('PartOfSpeech', blank=True, null=True, on_delete=models.PROTECT,
                                        related_name='words')
@@ -152,7 +151,7 @@ class WordCardsList(models.Model):
     
 class WordList(models.Model):
     name = models.CharField(max_length=255, validators=[validate_not_empty])
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, related_name='word_lists')
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, related_name='word_lists')
 
     def __str__(self):
         return f"{self.name} created by {self.author}"

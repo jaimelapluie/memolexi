@@ -41,13 +41,15 @@ INSTALLED_APPS = [
     "debug_toolbar",
     'django_filters',
     'memo',
+    'users',
 ]
 
 LOGOUT_REDIRECT_URL = '/login/'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-# AUTH_USER_MODEL = 'User'
+AUTH_USER_MODEL = "users.User"
+
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,

@@ -139,12 +139,6 @@ class PartOfSpeechSerializer(serializers.ModelSerializer):
         fields = ["part_of_speech"]
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "username", ]
-
-
 class WordReviewListSerializer(serializers.ListSerializer):
     def update(self, instance_list, validated_data):
         instance_mapping = {instance.id: instance for instance in instance_list}

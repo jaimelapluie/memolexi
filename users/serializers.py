@@ -1,12 +1,32 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ["id", "username", "password", "email", "first_name", "telegram_id", "main_language"]
+        extra_kwargs = {
+            "password": {"write_only": True}  # Пароль только для записи
+        }
+        
+    def create(self, validated_data):
+        # Извлекаю пароль из данных
+        password = validated_data.pop("password", None)
+        # Создаю пользователя без пароля
+        user = self.Meta.model(**validated_data)
+        # Устанавливаю пароль с хэшированием
+        if password is not None:
+            user.set_password(password)
+        user.save()
+        return user
+        
+        
 class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ("username", "email", "password", "password2")
         extra_kwargs = {"password": {"write_only": True}}
 
@@ -17,7 +37,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop("password2")  # Удаляем повтор пароля
-        user = User.objects.create_user(**validated_data)
+        user = get_user_model().objects.create_user(**validated_data)
         return user
 
 
@@ -53,6 +73,4 @@ class SetNewPasswordSerializer(serializers.Serializer):
         if data['new_password'] == data['new_password2']:
             return data
         raise serializers.ValidationError("Oops.. passwords do not match")
-    
-        
     
