@@ -178,52 +178,52 @@ class UserListView(APIView):
         serializer = UserSerializer(data=request.data)
         print(f"serializer={serializer}")
         print(f"request.data= {request.data}")
+        # if serializer.is_valid():
+        #     try:
+        #         # Если записи нет, создаём новую
+        #         print('serializer.validated_data', serializer.validated_data)
+        #         print('Проверка идеи', serializer.validated_data['username'])
+        #         password = validated_data.pop("password", None)
+        #         # Создаю пользователя без пароля
+        #         user = self.Meta.model()(**validated_data)
+        #         # Устанавливаю пароль с хэшированием
+        #         if password is not None:
+        #             user.set_password(password)
+        #         user.save()
+        #         author, created = get_user_model().objects.get_or_create(**serializer.validated_data)
+        #         print(author, created)
+        #     except Exception as e:
+        #         return Response({"error_from UserListView.post": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        #
+        #     if created:
+        #         print('UserListView/post/created зашел')
+        #         print(f"type(author)={type(author)}")
+        #         print(f"UserSerializer(author).data={UserSerializer(author).data}")
+        #         print(f"type(UserSerializer(author).data)={type(UserSerializer(author).data)}")
+        #         return Response(UserSerializer(author).data, status=status.HTTP_201_CREATED)
+        #     else:
+        #         return Response(
+        #             {'message': f'"{serializer.validated_data.get(author)}" is already exists'},
+        #             status=status.HTTP_409_CONFLICT
+        #         )
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         if serializer.is_valid():
             try:
-                # Если записи нет, создаём новую
-                print('serializer.validated_data', serializer.validated_data)
-                print('Проверка идеи', serializer.validated_data['username'])
-                # print('Проверка идеи2', get_user_model().objects.get(**serializer.validated_data))
-                # author, created = 'Author', False  # заглушка
-                author, created = get_user_model().objects.get_or_create(**serializer.validated_data)
-                print(author, created)
-            except Exception as e:
-                return Response({"error_from UserListView.post": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-            
-            if created:
-                print('UserListView/post/created зашел')
-                print(f"type(author)={type(author)}")
-                print(f"UserSerializer(author).data={UserSerializer(author).data}")
-                print(f"type(UserSerializer(author).data)={type(UserSerializer(author).data)}")
-                return Response(UserSerializer(author).data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(
-                    {'message': f'"{serializer.validated_data.get(author)}" is already exists'},
-                    status=status.HTTP_409_CONFLICT
-                )
+                username = serializer.validated_data.get('username')
+                user_exists = get_user_model().objects.filter(username=username).exists()
+                print(username, user_exists)
+                if user_exists:
+                    print("Зашел в UserListView в if user_exists ")
+                    return Response({'message': f'"{serializer.validated_data.get(username)}" is already exists'},
+                                    status=status.HTTP_409_CONFLICT)
+                user = serializer.save()
+                
+                return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+            except Exception as err:
+                return Response({"error_from UserListView.post": str(err)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class UserDetailView(APIView):
-    # def get(self, request):
-    #     username = request.query_params.get('username')
-    #     telegram_id = request.query_params.get('telegram_id')
-    #
-    #     if not username and not telegram_id:
-    #         return Response({"service message": "Должен быть передан username или telegram_id"},
-    #                         status=status.HTTP_400_BAD_REQUEST)
-    #
-    #     try:
-    #         if username:
-    #             user = get_user_model().objects.get(username=username)
-    #         elif telegram_id:
-    #             user = get_user_model().objects.get(telegram_id=telegram_id)
-    #     except get_user_model().DoesNotExist:
-    #         return Response({"service message": "Пользователь не найден"},
-    #                         status=status.HTTP_404_NOT_FOUND)
-    #     serializer = UserSerializer(user)
-    #     return Response(serializer.data)
-        
     def put(self, request):
         print("UserDetailView -> put")
         print(request)
@@ -249,6 +249,27 @@ class UserDetailView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserDeleteView(APIView):
+    authentication_classes = [
+        JWTAuthentication,
+        SessionAuthentication,
+        BasicAuthentication
+    ]
+    
+    def delete(self, request):
+        user = request.user
+        if user.is_anonymous:
+            return Response({"service message": "Анонимус, залогинься"},
+                            status=status.HTTP_404_NOT_FOUND)
+        
+        try:
+            user.delete()
+            return Response({"service message": "Аккаунт удалён"})
+        except get_user_model().DoesNotExist as err:
+            return Response({"service message": "Пользователь не найден"},
+                            status=status.HTTP_404_NOT_FOUND)
     
     
 class UploadWordsView(APIView):

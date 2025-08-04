@@ -38,6 +38,7 @@ urlpatterns = [
     
     path('users/', views.UserListView.as_view(), name='users-list'),
     path('users/update/', views.UserDetailView.as_view(), name='user-update'),
+    path('users/delete/', views.UserDeleteView.as_view(), name='user-delete'),
     path('users/check_username/', views.CheckUsernameView.as_view(), name='username-check'),
     path('users/check_telegram_id/', views.CheckTelegramIdView.as_view(), name='telegram_id-check'),
     

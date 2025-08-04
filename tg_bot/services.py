@@ -97,8 +97,9 @@ async def get_profile_by_telegram_id(telegram_id) -> dict:
             return data
             
         except httpx.HTTPStatusError as err:
-            text = (f"Профиль не найден. Ошибка: {err.response.text}. "
-                    f"Чтобы начать регистрацию, введи команду \n/start_questionnaire")
+            text = (f"Ошибка: {err.response.json().get("service message")}. "
+                    f"Чтобы посмотреть профиль, сначала его надо зарегистрировать:"
+                    f" введи команду \n/start_questionnaire")
             print(text)
             return {'service message': text}
 

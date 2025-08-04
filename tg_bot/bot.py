@@ -1,15 +1,13 @@
 import httpx
 from aiogram import Bot, Dispatcher, Router, F
 from aiogram.client.default import DefaultBotProperties
-from aiogram.types import Message
-import asyncio
 import os
 
 from aiogram.utils.chat_action import ChatActionSender
 from dotenv import load_dotenv
 
 import asyncio
-from aiogram.filters import Command
+from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
@@ -40,7 +38,6 @@ class Form(StatesGroup):
 
 
 questionnaire_router = Router()
-kek = Router()
 
 
 class EditProfile(StatesGroup):
@@ -55,14 +52,9 @@ class EditProfile(StatesGroup):
 edit_profile_router = Router()
 
 
-# @questionnaire_router.message(F.text == 'Регистрация')
-# async def questionnaire_check_state(message: Message, state: FSMContext):
-#     print("зашел сюда")
-#     await message.answer('Привет, для удобства и возможности доступа к сервису вне пределах telegram, '
-#                          'заполни анкету из 5 пунктов. Для начала напиши своё имя - как к тебе обращаться: ',
-#                          reply_markup=ReplyKeyboardRemove())
-#     # await state.set_state(Form.name)
-
+class AuthStates(StatesGroup):
+    login_password = State()
+    
 
 @questionnaire_router.message(Command('start_questionnaire'))
 async def start_questionnaire_process(message: Message, state: FSMContext):
@@ -174,7 +166,7 @@ async def questionnaire_password(message: Message, state: FSMContext):
 
 # сохраняю данные
 @questionnaire_router.callback_query(F.data == 'correct', Form.check_state)
-async def questionnaire_check_state(call: CallbackQuery, state: FSMContext):
+async def questionnaire_submit_ok(call: CallbackQuery, state: FSMContext):
     """Подтверждение данных указанных во время Регистрации"""
     
     await call.message.edit_reply_markup(reply_markup=None)  # удаляю кнопку
@@ -205,7 +197,7 @@ async def questionnaire_check_state(call: CallbackQuery, state: FSMContext):
 
 # запускаем анкету сначала
 @questionnaire_router.callback_query(F.data == 'incorrect', Form.check_state)
-async def questionnaire_check_state(call: CallbackQuery, state: FSMContext):
+async def questionnaire_submit_retry(call: CallbackQuery, state: FSMContext):
     """Отказ сохранять данные, указанные во время Регистрации. Регистрация идет по новой"""
     
     await call.answer('Видимо что-то напутали, давай по-новой!')
@@ -265,13 +257,15 @@ async def profile_checking(message: Message, state: FSMContext):
     profile_data = await get_profile_by_telegram_id(curr_telegram_id)
     print(profile_data)
     text = ''
+    keyboard = None
     if "service message" in profile_data:
         text = profile_data.get("service message")
     else:
         for k, v in profile_data.items():
             text += f"{str(k)}: {str(v)} \n"
             print(k, v)
-    await message.answer(text, reply_markup=edit_delete_profile_kb())  # inline кнопки
+            keyboard = edit_delete_profile_kb()
+    await message.answer(text, reply_markup=keyboard)  # inline кнопки
 
 
 @dp.callback_query(F.data == "edit_profile")
@@ -326,8 +320,8 @@ async def is_edit_profile_state(message: Message, state: FSMContext) -> bool:
         EditProfile.email.state,
         EditProfile.main_language.state,
     }
-
-
+    
+    
 @edit_profile_router.message(F.text, is_edit_profile_state)
 # Дописать фильтр обработчик состояний
 async def process_field_input(message: Message, state: FSMContext):
@@ -335,7 +329,6 @@ async def process_field_input(message: Message, state: FSMContext):
     
     print(f"{'*' * 50} \nЗашел в process_field_input")
     state_data = await state.get_data()
-    current_state = await state.get_state()
     field_name = state_data.get('field')
     field_value = message.text
     
@@ -350,18 +343,81 @@ async def process_field_input(message: Message, state: FSMContext):
     """Возможно стоит добавить кнопки с выбором языка, кнопку юзернейм из телеграма если он != текущему
         Так же надо добавить нормальное добавление пароля, не как текст
     """
+    await state.set_state(None)
 
+
+@dp.message(StateFilter(None), ~F.text.startswith("/"))
+async def simple_echo(message: Message, state: FSMContext):
+    """Тестовая функция. Перехватывает сообщения и отвечает тут же, но только если state=None """
+    print(message.text)
+    await message.answer(message.text)
+    
+
+@dp.message(AuthStates.login_password)
+async def login_and_save_token(message: Message, state: FSMContext):
+    """Отрабатывет для получения токена"""
+    
+    await message.answer("Зашлушка из login_and_save_token ")
+    
+    password = message.text
+    url = "http://127.0.0.1:8000/auth/token/"
+    profile_data = await get_profile_by_telegram_id(telegram_id=message.from_user.id)
+    username = profile_data.get("username")
+    user_data = {"username": username, "password": password}
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            try:
+                print('Пробую...')
+                response = await client.post(url, json=user_data)
+                print(response)
+                print(response.json())
+                
+                response.raise_for_status()
+    
+                await message.answer(f"Успешно получены токены")
+                await state.update_data(token=response.json())
+                state_data = await state.get_data()
+                await message.answer(f"Пробую добавить кнопку", reply_markup=edit_delete_profile_kb())
+
+            except httpx.HTTPStatusError as err:
+                error_detail = err.response.json()
+                await message.answer(error_detail)
+            except Exception as err:
+                print(f"{err}")
+    except Exception as err:
+        print(err)
+    
+    await message.answer("Завершение работы login_and_save_token")
+    # await state.set_state(None)
+    
 
 @dp.callback_query(F.data == "delete_profile")
-async def edit_profile(call: CallbackQuery, state: FSMContext):
+async def delete_profile(call: CallbackQuery, state: FSMContext):
     """Профиль -> Отработка кнопки Удалить"""
     
-    await call.message.edit_reply_markup(reply_markup=None)  # удаляю кнопку
-    await call.message.answer('Функция будет доступна в течении нескольких дней')
-
+    telegram_id = call.from_user.id
+    state_data = await state.get_data()
+    token = state_data.get("token")
+    print(token)
+    print(state_data)
+    
+    if token:
+        headers = {"Authorization": f"Bearer {token}"}
+        print('токен есть, проверим доступ')
+        # with httpx.AsyncClient() as client:
+        #     ...
+        
+    else:
+        # токена нету, запрашиваю пароль
+        await call.message.answer('Пожалуйста, введите пароль для подтверждения удаления профиля')
+        await call.message.edit_reply_markup(reply_markup=None)  # удаляю кнопку
+        await state.set_state(AuthStates.login_password)
+        
 
 dp.include_router(questionnaire_router)
 dp.include_router(edit_profile_router)
+dp.message.register(simple_echo, StateFilter(None), ~F.text.startswith("/"))
 
 
 async def main():

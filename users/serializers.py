@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
         }
         
     def create(self, validated_data):
+        print('Зашел в UserSerializer -> create', validated_data)
         # Извлекаю пароль из данных
         password = validated_data.pop("password", None)
         # Создаю пользователя без пароля
@@ -20,7 +21,16 @@ class UserSerializer(serializers.ModelSerializer):
             user.set_password(password)
         user.save()
         return user
-        
+    
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
+    
         
 class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True, required=True)
