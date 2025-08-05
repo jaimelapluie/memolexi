@@ -14,7 +14,8 @@ from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
 from aiogram.utils.chat_action import ChatActionSender
 from keyboards import language_kb, get_login_tg_kb, check_data_kb, menu_kb, set_default_commands, \
     edit_delete_profile_kb, edit_kb
-from tg_bot.services import is_username_exists, get_profile_by_telegram_id, create_user, update_user_data
+from tg_bot.services import is_username_exists, get_profile_by_telegram_id, create_user, update_user_data, get_token, \
+    api_delete_profile
 from utils import extract_number
 from aiogram.fsm.storage.memory import MemoryStorage
 
@@ -254,17 +255,23 @@ async def profile_checking(message: Message, state: FSMContext):
     
     await state.clear()
     curr_telegram_id = message.from_user.id
-    profile_data = await get_profile_by_telegram_id(curr_telegram_id)
-    print(profile_data)
+    # profile_data = await get_profile_by_telegram_id(curr_telegram_id)
+    # print(profile_data)
     text = ''
     keyboard = None
-    if "service message" in profile_data:
-        text = profile_data.get("service message")
-    else:
-        for k, v in profile_data.items():
+    
+    is_exists, data = await get_profile_by_telegram_id(curr_telegram_id)
+    
+    if is_exists:
+        for k, v in data.items():
             text += f"{str(k)}: {str(v)} \n"
             print(k, v)
-            keyboard = edit_delete_profile_kb()
+        keyboard = edit_delete_profile_kb()
+    else:
+        error_msg = data['error_msg']
+        text = (f"Ошибка: {error_msg}. "
+                f"Чтобы посмотреть профиль, сначала его надо зарегистрировать:"
+                f" введи команду \n/start_questionnaire")
     await message.answer(text, reply_markup=keyboard)  # inline кнопки
 
 
@@ -357,62 +364,52 @@ async def simple_echo(message: Message, state: FSMContext):
 async def login_and_save_token(message: Message, state: FSMContext):
     """Отрабатывет для получения токена"""
     
-    await message.answer("Зашлушка из login_and_save_token ")
+    await message.answer("Реализуется выполнение login_and_save_token")
     
     password = message.text
-    url = "http://127.0.0.1:8000/auth/token/"
-    profile_data = await get_profile_by_telegram_id(telegram_id=message.from_user.id)
-    username = profile_data.get("username")
+    is_exist, data = await get_profile_by_telegram_id(telegram_id=message.from_user.id)
+    if is_exist:
+        print(data)
+        print(type(data))
+        username = data.get("username")
+    else:
+        return await message.answer("Пользователь не найден")
+    
     user_data = {"username": username, "password": password}
+    is_success, auth_token = await get_token(user_data)
     
-    try:
-        async with httpx.AsyncClient() as client:
-            try:
-                print('Пробую...')
-                response = await client.post(url, json=user_data)
-                print(response)
-                print(response.json())
-                
-                response.raise_for_status()
-    
-                await message.answer(f"Успешно получены токены")
-                await state.update_data(token=response.json())
-                state_data = await state.get_data()
-                await message.answer(f"Пробую добавить кнопку", reply_markup=edit_delete_profile_kb())
-
-            except httpx.HTTPStatusError as err:
-                error_detail = err.response.json()
-                await message.answer(error_detail)
-            except Exception as err:
-                print(f"{err}")
-    except Exception as err:
-        print(err)
+    if is_success:
+        await message.answer(f"Успешно получены токены")
+        await state.update_data(token=auth_token)
+        await message.answer(f"Пароль верный. Подтвердите действие:", reply_markup=edit_delete_profile_kb())
+    else:
+        await message.answer(f"{auth_token}. Введите верный пароль")
     
     await message.answer("Завершение работы login_and_save_token")
-    # await state.set_state(None)
     
 
 @dp.callback_query(F.data == "delete_profile")
 async def delete_profile(call: CallbackQuery, state: FSMContext):
     """Профиль -> Отработка кнопки Удалить"""
     
-    telegram_id = call.from_user.id
+    # telegram_id = call.from_user.id
     state_data = await state.get_data()
     token = state_data.get("token")
-    print(token)
-    print(state_data)
+    print(f"delete_profile -> token = {token}")
+    print(f"state_data {state_data}")
     
     if token:
-        headers = {"Authorization": f"Bearer {token}"}
-        print('токен есть, проверим доступ')
-        # with httpx.AsyncClient() as client:
-        #     ...
+        is_deleted, response = await api_delete_profile(token)
+        if is_deleted:
+            await call.message.answer(f"Профиль успешно удалён.", reply_markup=None)
+        else:
+            await call.message.answer(f"Что-то пошло не так. {response}", reply_markup=None)
         
     else:
         # токена нету, запрашиваю пароль
         await call.message.answer('Пожалуйста, введите пароль для подтверждения удаления профиля')
-        await call.message.edit_reply_markup(reply_markup=None)  # удаляю кнопку
         await state.set_state(AuthStates.login_password)
+    await call.message.edit_reply_markup(reply_markup=None)  # удаляю кнопку
         
 
 dp.include_router(questionnaire_router)
