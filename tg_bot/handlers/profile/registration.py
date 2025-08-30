@@ -9,7 +9,7 @@ from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
 from tg_bot.config import bot_instance
 from tg_bot.keyboards.profile_kb import language_kb, get_login_tg_kb, check_data_kb
 from tg_bot.services.api_users import is_username_exists, create_user, get_profile_by_telegram_id
-from tg_bot.states import Form
+from tg_bot.states.profile import Form
 
 questionnaire_router = Router()
 
@@ -131,7 +131,7 @@ async def questionnaire_password(message: Message, state: FSMContext):
 # сохраняю данные
 @questionnaire_router.callback_query(F.data == 'correct', Form.check_state, ~F.text.startswith('/'))
 async def questionnaire_submit_ok(call: CallbackQuery, state: FSMContext):
-    """Подтверждение данных указанных во время Регистрации"""
+    """Подтверждение корректности введенных данных, указанных во время регистрации"""
     
     await call.message.edit_reply_markup(reply_markup=None)  # удаляю кнопку
     
@@ -162,7 +162,7 @@ async def questionnaire_submit_ok(call: CallbackQuery, state: FSMContext):
 # запускаем анкету сначала
 @questionnaire_router.callback_query(F.data == 'incorrect', Form.check_state, ~F.text.startswith('/'))
 async def questionnaire_submit_retry(call: CallbackQuery, state: FSMContext):
-    """Отказ сохранять данные, указанные во время Регистрации. Регистрация идет по новой"""
+    """Отказ сохранять данные, указанные во время Регистрации. Регистрация пойдет по новой"""
     
     await call.answer('Видимо что-то напутали, давай по-новой!')
     await call.message.edit_reply_markup(reply_markup=None)

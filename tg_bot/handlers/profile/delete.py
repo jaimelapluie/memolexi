@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery, Message
 
 from tg_bot.keyboards.profile_kb import get_edit_delete_profile_kb
 from tg_bot.services.api_users import get_token, get_profile_by_telegram_id, api_delete_profile
-from tg_bot.states import AuthStates
+from tg_bot.states.profile import AuthStates
 
 
 delete_profile_router = Router()

@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery, Message
 
 from tg_bot.keyboards.profile_kb import get_edit_kb
 from tg_bot.services.api_users import update_user_data
-from tg_bot.states import EditProfile
+from tg_bot.states.profile import EditProfile
 
 
 edit_profile_router = Router()

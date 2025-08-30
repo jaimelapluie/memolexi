@@ -13,3 +13,6 @@ async def get_words_for_user(user_id: int, page: int, page_size: int) -> list:
         
         return response.json()["results"]
     
+
+async def create_word(word_data: dict, username: str) -> tuple[bool, str | None]:
+    return True, None

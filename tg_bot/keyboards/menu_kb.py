@@ -13,6 +13,7 @@ def menu_kb():
 async def set_default_commands(bot: Bot):
     commands = [
         BotCommand(command='start', description='Тестовый режим'),
+        BotCommand(command='add_word', description='Добавить слово'),
         BotCommand(command='start_questionnaire', description='Регистрация'),
         BotCommand(command='profile', description='Профиль'),
         BotCommand(command='help', description='Помощь'),

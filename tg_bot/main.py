@@ -13,6 +13,7 @@ from tg_bot.handlers.profile.edit import edit_profile_router
 from tg_bot.handlers.profile.info import info_profile_router
 from tg_bot.handlers.profile.registration import questionnaire_router
 from tg_bot.handlers.start import start_router
+from tg_bot.handlers.words.adding import adding_words_router
 from tg_bot.keyboards.menu_kb import set_default_commands
 
 
@@ -24,6 +25,7 @@ routers = [
     info_profile_router,
     questionnaire_router,
     edit_profile_router,
+    adding_words_router,
 ]
 for router in routers:
     dp.include_router(router)
