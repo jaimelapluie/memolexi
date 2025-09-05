@@ -29,12 +29,11 @@ async def get_dynamic_add_word_kb(state: FSMContext) -> InlineKeyboardMarkup:
     current_state = await state.get_state()
     state_data = await state.get_data()
     
-    print(current_state)
-    print(state_data)
+    print(f"current_state {current_state}")
     
     has_data = any((value := state_data.get(key)) and value.strip() for key in state_dict.keys())
     if has_data:
-        print(f'has_data? {has_data}')
+        # print(f'has_data? {has_data}')
         kb_list.append([InlineKeyboardButton(text='✅ Сохранить', callback_data='save')])
     
     kb_list.extend([
@@ -43,4 +42,3 @@ async def get_dynamic_add_word_kb(state: FSMContext) -> InlineKeyboardMarkup:
     ])
     keyboard = InlineKeyboardMarkup(row_width=2, inline_keyboard=kb_list)
     return keyboard
-

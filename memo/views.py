@@ -89,13 +89,13 @@ class WordListView(APIView):
         #             .all())
         print(request.user)
         queryset = (
-            WordCards.objects
-            .select_related('part_of_speech')
+            WordCards.objects.select_related("part_of_speech")
             .prefetch_related(
-                Prefetch(   # Перечитать как нюансы как это работает
-                    'wordcards_links',
-                    queryset=WordCardsList.objects.select_related('word_lists').only('word_lists__name',
-                                                                                     'word_lists__author')
+                Prefetch(  # Перечитать как нюансы как это работает
+                    "wordcards_links",
+                    queryset=WordCardsList.objects.select_related("word_lists").only(
+                        "word_lists__name", "word_lists__author"
+                    ),
                 )
             )
             .all()
@@ -223,7 +223,8 @@ class UserListView(APIView):
                 return Response({"error_from UserListView.post": str(err)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UserDetailView(APIView):
+
+class UserDetailView(APIView):  # сделать доступ по токену
     def put(self, request):
         print("UserDetailView -> put")
         print(request)

@@ -10,6 +10,7 @@ from tg_bot.states.profile import AuthStates
 delete_profile_router = Router()
 
 
+# TODO: рефакторинг кода сделать: возможно стоит сразу проверять наличие токена, без проверки наличия юзера
 @delete_profile_router.message(AuthStates.login_password)
 async def login_and_save_token(message: Message, state: FSMContext):
     """Отрабатывет для получения токена"""

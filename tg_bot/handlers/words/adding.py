@@ -122,9 +122,11 @@ async def waiting_submit_retry(call: CallbackQuery, state: FSMContext):
 @adding_words_router.callback_query(F.data == 'skip')
 async def skipping_step(call: CallbackQuery, state: FSMContext):
     
-    state_tuple = (AddWordProces.waiting_word, AddWordProces.waiting_translation,
-                   AddWordProces.waiting_example, AddWordProces.waiting_source,
-                   AddWordProces.waiting_part_of_speech, AddWordProces.waiting_check_state,)
+    state_tuple = (
+        AddWordProces.waiting_word, AddWordProces.waiting_translation,
+        AddWordProces.waiting_example, AddWordProces.waiting_source,
+        AddWordProces.waiting_part_of_speech, AddWordProces.waiting_check_state,
+    )
     
     answer_dict = {
         AddWordProces.waiting_word: 'Введите новое слово:',

@@ -9,6 +9,7 @@ from aiogram.utils.chat_action import ChatActionSender
 
 from tg_bot.config import bot_instance
 
+
 start_router = Router()
 
 
@@ -17,8 +18,36 @@ async def simple_echo(message: Message, state: FSMContext):
     """Тестовая функция. Перехватывает сообщения и отвечает тут же, но только если state=None """
     print(message.text)
     await message.answer(message.text)
+    
 
-
+@start_router.message(F.text == "/help")
+async def start_handler(message: Message, state: FSMContext):
+    """Временный хэндлер, просмотр слов"""
+    
+    if message.from_user.id not in (459483895, 240753763):
+        await message.answer('Ошибка доступа')
+        return
+    
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get("http://127.0.0.1:8000/words/")
+            response.raise_for_status()
+            row_words = response.json()
+            words = row_words['results']
+            print(words)
+            text = ''
+            for dict_word in words:
+                for k, v in dict_word.items():
+                    print(k, v)
+                    text += f"{str(k)}: {str(v)} \n"
+        
+        except httpx.HTTPError as err:
+            print(f"Ошибка при запросе:{err}")
+            text = f"Ошибка при запросе:{err}"
+        
+        await message.answer(text)
+    
+    
 @start_router.message(F.text == "/start")
 async def start_handler(message: Message, state: FSMContext):
     """Тестовый хэндлер, приветствие нового пользователя"""

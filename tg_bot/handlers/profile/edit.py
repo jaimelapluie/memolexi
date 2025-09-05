@@ -30,12 +30,30 @@ async def edit_profile_field(call: CallbackQuery, state: FSMContext):
     """
     
     field_mapping = {
-        'edit_username': {'prompt': 'Введи новый username', 'state': EditProfile.username, 'field': 'username'},
-        'edit_password': {'prompt': 'Введи новый password', 'state': EditProfile.password, 'field': 'password'},
-        'edit_first_name': {'prompt': 'Введи новое имя', 'state': EditProfile.first_name, 'field': 'first_name'},
-        'edit_email': {'prompt': 'Введи новый email', 'state': EditProfile.email, 'field': 'email'},
-        'edit_main_language': {'prompt': 'Введи новый language', 'state': EditProfile.main_language,
-                               'field': 'main_language'},
+        'edit_username': {
+            'prompt': 'Введи новый username',
+            'state': EditProfile.username,
+            'field': 'username'
+        },
+        'edit_password': {
+            'prompt': 'Введи новый password',
+            'state': EditProfile.password,
+            'field': 'password'
+        },
+        'edit_first_name': {
+            'prompt': 'Введи новое имя',
+            'state': EditProfile.first_name,
+            'field': 'first_name'
+        },
+        'edit_email': {
+            'prompt': 'Введи новый email',
+            'state': EditProfile.email,
+            'field': 'email'
+        },
+        'edit_main_language': {
+            'prompt': 'Введи новый language',
+            'state': EditProfile.main_language,
+            'field': 'main_language'},
     }
     field_info = field_mapping.get(call.data)
     

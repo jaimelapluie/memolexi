@@ -1,10 +1,48 @@
 from typing import Tuple
 import httpx
 # from aiogram.fsm.context import FSMContext
+from tg_bot.database.models import User
 
 # from tg_bot.bot import EditProfile
 
 
+# TODO: надо дописать возможность обновления токена и подумать над объединением с get_token
+async def get_existing_token(telegram_id: int):
+    """Функция получения токена из локальной БД - для бота"""
+    
+    token_or_none = User.get_or_none(User.telegram_id == telegram_id)
+    print(f"token_or_none={token_or_none}")
+    if token_or_none:
+        access_token = token_or_none.access_token
+        print(f"access_token получен: {access_token}")
+        return True, access_token
+    
+    return False, "Токен должен содержать непустой ключ 'access' типа строки"
+    
+
+# TODO: оптимизировать?
+async def put_token_to_local_db(token_data, user_data):
+    """Полученные токены сохраняет в локальную БД.
+    Если такой telegram_id существует, то перезаписывает?"""
+    
+    print('Зашел в put_token_to_local_db')
+    access_token = token_data['access']
+    refresh_token = token_data['refresh']
+    
+    try:
+        user_token = User.create(
+            telegram_id=user_data['telegram_id'],
+            username=user_data['username'],
+            access_token=access_token,
+            refresh_token=refresh_token)
+        return True
+    except:
+        return False
+    
+
+# TODO: надо дописать возможность обновления токена и подумать над объединением с get_existing_token
+#  Хорошая идея - get_token общая функция, перед обращением к API она сначала смотрит в локальной
+#  БД, и если не находит делает запрос к API, а после получения - сохраняет в локальную БД!
 async def get_token(user_data: dict) -> Tuple[bool, str]:
     """
     Асинхронно запрашивает токен аутентификации через DRF API
@@ -18,13 +56,14 @@ async def get_token(user_data: dict) -> Tuple[bool, str]:
     
     ConnectionError: Если не удалось установить соединение с API.
     """
+    print('Зашел в get_token')
     
     url = "http://127.0.0.1:8000/auth/token/"
     
     try:
         async with httpx.AsyncClient() as client:
             try:
-                print('Пробую...')
+                print('Пробую получить токен...')
                 response = await client.post(url, json=user_data)
                 response.raise_for_status()
                 token = response.json()
@@ -88,7 +127,7 @@ async def is_username_exists(username) -> tuple[bool, str]:
             return True, text
 
 
-async def update_user_data(user_data, field_name):
+async def update_user_data(user_data, field_name):  # Добавить токен доступа
     """Функция обновляющая данные пользователя из данных переданных из хэндлера редактируемого"""
     
     url = f"http://127.0.0.1:8000/users/update/?telegram_id={user_data["telegram_id"]}"
@@ -156,6 +195,7 @@ async def api_delete_profile(token: dict) -> Tuple[bool, str | None]:
             return False, f"Ошибка соединения с API: {str(err)}"
         
 
+# TODO: add token verification! Now an access is free by telegram_id
 async def get_profile_by_telegram_id(telegram_id) -> Tuple[bool, dict]:
     """Функция возвращает информацию о профиле"""
     
