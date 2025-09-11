@@ -21,8 +21,9 @@ STATE_CONFIG = {
     },
     AddWordProces.waiting_translation: {
         "data_key": "translation",
-        "prompt": lambda data: f'Введите перевод для {data.get('word_or_expression')} '
-                               f'"{data.get('word', 'слова, которое вы введете позже')}":',
+        "prompt": lambda data: f'Введите перевод для '
+                               f'{data.get('word_or_expression', 'слова, которое вы введете позже')} '
+                               f'"{data.get('word', '')}"',
         "next_state": AddWordProces.waiting_example,
     },
     AddWordProces.waiting_example: {
@@ -33,7 +34,7 @@ STATE_CONFIG = {
     },
     AddWordProces.waiting_source: {
         "data_key": "source",
-        "prompt": lambda data: f'Откуда взято это {data.get("word_or_expression", "")} - книга, сериал, статья?',
+        "prompt": lambda data: f'Откуда взято это {data.get("word_or_expression", "")}- книга, сериал, статья?',
         "next_state": AddWordProces.waiting_part_of_speech,
     },
     AddWordProces.waiting_part_of_speech: {
@@ -43,9 +44,58 @@ STATE_CONFIG = {
      }
 }
 
+# TODO в handlers/profile/delete есть такая же функция. Объединить
+@adding_words_router.message(AuthStates.login_password)
+async def handle_login_and_save_token(message: Message, state: FSMContext):
+    """Отрабатывет для получения токена"""
 
+    await message.answer("login_and_save_token: пробуем получить токен")
+
+    telegram_id = message.from_user.id
+    password = message.text
+    is_exist, data = await get_profile_by_telegram_id(telegram_id=telegram_id)
+    if is_exist:
+        print(data)
+        print(type(data))
+        username = data.get("username")
+    else:
+        return await message.answer("Пользователь не найден")
+
+    user_data = {"username": username, "password": password}
+    is_success, auth_token = await get_token(user_data)
+
+    if is_success:
+        print(f"auth_token: {auth_token}")
+        await message.answer(f"Пароль верный. Успешно получены токены")
+        user_data.pop("password")
+        user_data.update(telegram_id=telegram_id)
+
+        is_done = await put_token_to_local_db(auth_token, user_data)
+        if is_done:
+            print("Врубаю AddWordProces.waiting_check_state")
+            await state.set_state(AddWordProces.waiting_check_state)
+            print("Врубил <<")
+            await message.answer(text=f"Отлично, теперь вернемся к подтверждению действия по добавлению слова:",
+                                 reply_markup=check_data_kb())
+        else:
+            await message.answer(text='В login_and_save_token произошла ошибка. Токен не сохранен в локальную базу')
+    else:
+        await message.answer(f"Вероятно введен неверный пароль, повторите попытку")
+    print("Завершение работы login_and_save_token")
+
+
+def make_caption(data):
+    print('Зашел в сборщик caption для AddWordProces.waiting_check_state:', "*" * 50)
+    caption = '\n'.join(
+        f'{key}: {data.get(key, "—")}' for key in ("word", "translation", "example", "source", "part_of_speech")
+    )
+    caption = f'Проверь, всё ли корректно? \n\n{caption}'
+    return caption
+
+
+# TODO: Добавить проверку, что пользователь существует - что есть кому добавлять вообще
 @adding_words_router.message(Command('add_word'))
-async def add_word(message: Message, state: FSMContext):
+async def handle_add_word_command(message: Message, state: FSMContext):
     """
     Начальный хэндлер, отрабатывающий команду add_word.
     Обращается к словарю STATE_CONFIG, извлекает текст и устанавливает состояние для FSM.
@@ -58,7 +108,7 @@ async def add_word(message: Message, state: FSMContext):
                          reply_markup=await get_dynamic_add_word_kb(state))
 
 
-async def is_current_state_in_STATE_CONFIG(message: Message, state: FSMContext) -> bool:
+async def is_state_in_config(message: Message, state: FSMContext) -> bool:
     """Кастомный фильтр для хэндлера process_input.
     Определяет, соответствует ли текущее FSM состояние одному из STATE_CONFIG
     Если да, возвращает True, нет — False
@@ -66,15 +116,15 @@ async def is_current_state_in_STATE_CONFIG(message: Message, state: FSMContext) 
     return await state.get_state() in STATE_CONFIG
     
 
-@adding_words_router.message(F.text, is_current_state_in_STATE_CONFIG)
-async def process_input(message: Message, state: FSMContext):
+@adding_words_router.message(F.text, is_state_in_config)
+async def process_word_input(message: Message, state: FSMContext):
     """
     Ключевой хэндлер перебора FSM-состояний по заполнению карточек слова.
     В зависимости от текущего состояния, FSM data пополняется новой информацией от пользователя:
-    Словарь STATE_CONFIG содержит ожидаемые состояния и их конфигурации (ключевое слово, текст, и следующий шаг)
+    Словарь STATE_CONFIG содержит ожидаемые состояния и их конфигурации (ключевое слово, текст, и следующее состояние)
     Функция берет данные пользователя и добавляет их в качестве значения по ключу (из конфиги).
     
-    Последний шаг (waiting_check_state) отрабатывается в отдельном условии, выводя собранную информацию,
+    Последние состояние (waiting_check_state) отрабатывается в отдельном условии, выводя собранную информацию,
     и направляя её на проверку пользователю - появляются кнопки ("Ок" и "Заполнить заново").
     После хэндлер передает управление к waiting_check_state
     
@@ -94,14 +144,10 @@ async def process_input(message: Message, state: FSMContext):
         await state.update_data(**{config['data_key']: user_input})
     data = await state.get_data()
 
-    # Получение промпта для следующего шага
+    # Получение промпта для следующего состояния
     next_state = config["next_state"]
     if next_state == AddWordProces.waiting_check_state:
-        print('Зашел в if next_state == AddWordProces.waiting_check_state:', "*" * 50)
-        caption = '\n'.join(
-            f'{key}: {data.get(key, "—")}' for key in ("word", "translation", "example", "source", "part_of_speech")
-        )
-        caption = f'Проверь, всё ли корректно? \n\n{caption}'
+        caption = make_caption(data)  # получение текста вынесено в отдельную функцию
         await message.answer(text=caption, reply_markup=check_data_kb())
         await state.set_state(AddWordProces.waiting_check_state)
         return
@@ -113,64 +159,73 @@ async def process_input(message: Message, state: FSMContext):
     
     await message.answer(text=prompt, reply_markup=await get_dynamic_add_word_kb(state))
     await state.set_state(next_state)
-    
-    
-# waiting_check_state
-# correct
 
-# skip
+
+# TODO: ДОписать хэндлер
+@adding_words_router.callback_query(F.data == 'save', is_state_in_config)
+async def handle_save_state(call: CallbackQuery, state: FSMContext):
+    print('Сохраняю состояние - заглушка')
+    await call.message.answer('Сохраняю состояние - заглушка')
+
+
+@adding_words_router.callback_query(F.data == 'skip', is_state_in_config)
+async def handle_skip_state(call: CallbackQuery, state: FSMContext):
+    """Handle 'skip' button press to skip current field in word card flow.
+
+    Retrieves the current state, determines the next state using STATE_CONFIG,
+    dynamically generates the caption and keyboard, and transitions to the next state.
+
+    Args:
+        call (CallbackQuery): The Telegram callback query object.
+        state (FSMContext): The finite state machine context for managing states.
+
+    Returns:
+        None
+
+    Notes:
+        - Uses 'make_caption' function to generate captions for 'waiting_check_state'.
+        - Dynamically generates keyboards via 'get_dynamic_add_word_kb' based on current data.
+        - Removes previous reply markup before sending new message.
+    """
+
+    # Узнаю текущее состояние, и через STATE_CONFIG смотрю следующее состояние - next_state
+    current_state = await state.get_state()
+    current_config = STATE_CONFIG[current_state]
+    next_state = current_config['next_state']
+    data = await state.get_data()
+
+    # Готовлю инфо-текст - какую информацию надо ввести для следующего состояние
+    # выполняю проверку грядущего состояния. Для waiting_check_state особый текст
+    if next_state == AddWordProces.waiting_check_state:
+        next_prompt = make_caption(data)
+        keyboard = check_data_kb()
+    else:
+        next_prompt = STATE_CONFIG[next_state]['prompt']
+        keyboard = await get_dynamic_add_word_kb(state)
+        if callable(next_prompt):
+            next_prompt = next_prompt(data)
+
+    # Вывожу подготовленный ранее инфо-текст для следующего состояния и включаю его
+    await call.message.edit_reply_markup(reply_markup=None)
+    await call.message.answer(text=next_prompt, reply_markup=keyboard)
+    await state.set_state(next_state)
+
 
 @adding_words_router.callback_query(F.data == 'incorrect', AddWordProces.waiting_check_state)
-async def waiting_check_state_retry(call: CallbackQuery, state: FSMContext):
+async def handle_retry_state(call: CallbackQuery, state: FSMContext):
     print('incorrect')
+    print('До', await state.get_data())
+    await state.clear()
     await state.set_state(AddWordProces.waiting_word)
-    await call.message.answer(text=STATE_CONFIG[AddWordProces.waiting_word]['prompt'])
-    await call.message.edit_reply_markup(reply_markup=None)
-    
+    print('После', await state.get_data())
 
-# TODO в handlers/profile/delete есть такая же функция. Объединить
-@adding_words_router.message(AuthStates.login_password)
-async def login_and_save_token(message: Message, state: FSMContext):
-    """Отрабатывет для получения токена"""
-    
-    await message.answer("login_and_save_token: пробуем получить токен")
-    
-    telegram_id = message.from_user.id
-    password = message.text
-    is_exist, data = await get_profile_by_telegram_id(telegram_id=telegram_id)
-    if is_exist:
-        print(data)
-        print(type(data))
-        username = data.get("username")
-    else:
-        return await message.answer("Пользователь не найден")
-    
-    user_data = {"username": username, "password": password}
-    is_success, auth_token = await get_token(user_data)
-    
-    if is_success:
-        print(f"auth_token: {auth_token}")
-        await message.answer(f"Пароль верный. Успешно получены токены")
-        user_data.pop("password")
-        user_data.update(telegram_id=telegram_id)
-        
-        is_done = await put_token_to_local_db(auth_token, user_data)
-        if is_done:
-            print("Врубаю AddWordProces.waiting_check_state")
-            await state.set_state(AddWordProces.waiting_check_state)
-            print("Врубил <<")
-            await message.answer(text=f"Отлично, теперь вернемся к подтверждению действия по добавлению слова:",
-                                 reply_markup=check_data_kb())
-        else:
-            await message.answer(text='В login_and_save_token произошла ошибка. Токен не сохранен в локальную базу')
-    else:
-        await message.answer(f"Вероятно введен неверный пароль, повторите попытку")
-    
-    print("Завершение работы login_and_save_token")
-    
+    await call.message.edit_reply_markup(reply_markup=None)
+    await call.message.answer(text=STATE_CONFIG[AddWordProces.waiting_word]['prompt'],
+                              reply_markup=await get_dynamic_add_word_kb(state))
+
 
 @adding_words_router.callback_query(F.data == 'correct', AddWordProces.waiting_check_state)
-async def waiting_check_state_ok(call: CallbackQuery, state: FSMContext):
+async def handle_confirm_state(call: CallbackQuery, state: FSMContext):
     """Добавление карточки слова текущим пользователем в БД.
     Отрабатывает после подтверждения корректности введенных данных на этапе FSM.
     """
@@ -204,3 +259,10 @@ async def waiting_check_state_ok(call: CallbackQuery, state: FSMContext):
         await state.clear()
     else:
         await call.message.answer(text=word)
+
+# TODO: handlers/adding_words.py — все message/callback хэндлеры
+#  filters/is_state_in_config.py — кастомный фильтр.
+#  services/words.py — логика работы с данными FSM.
+#  utils/text.py — make_caption.
+#  Все тексты (Введите слово, Проверь всё ли корректно) вынести в отдельный модуль/файл
+#  Добавить логгирование

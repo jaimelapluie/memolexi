@@ -170,7 +170,7 @@ class UserListView(APIView):
         print('B----')
         print(serializer)
         print('C----')
-        print(serializer.data[0])
+        [print(serializer.data[0]) if len(serializer.data) else ""]
         # return JsonResponse(serializer.data, safe=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
     

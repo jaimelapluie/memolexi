@@ -27,19 +27,22 @@ async def start_handler(message: Message, state: FSMContext):
     if message.from_user.id not in (459483895, 240753763):
         await message.answer('Ошибка доступа')
         return
-    
+
     async with httpx.AsyncClient() as client:
         try:
             response = await client.get("http://127.0.0.1:8000/words/")
             response.raise_for_status()
             row_words = response.json()
             words = row_words['results']
-            print(words)
-            text = ''
-            for dict_word in words:
-                for k, v in dict_word.items():
-                    print(k, v)
-                    text += f"{str(k)}: {str(v)} \n"
+            text = "start_handler - ошибка. Слов нет"
+            if len(words):
+                print(words)
+                text = ''
+                await message.answer('ХМмм') if len(words) else ""
+                for dict_word in words:
+                    for k, v in dict_word.items():
+                        print(k, v)
+                        text += f"{str(k)}: {str(v)} \n"
         
         except httpx.HTTPError as err:
             print(f"Ошибка при запросе:{err}")
