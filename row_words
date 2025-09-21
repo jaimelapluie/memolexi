@@ -1,0 +1,131 @@
+[33mcommit 5acc68fb4fd0fbe8894d6bf0ae3d3afe5afb7cea[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Sat Aug 30 13:17:29 2025 +0500
+
+    Add word handlers for text processing module. Save current state before planned refactoring
+
+[33mcommit 0397c0cc9ff68d58facfd38d659448e3be4231b8[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Wed Aug 6 23:44:38 2025 +0500
+
+    A major refactoring was carried out, the project structure was changed, a large file was split into several logical modules
+
+[33mcommit 2c9a72e61102e59479f4d9dfbc0ddd14e28a5f1e[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Tue Aug 5 22:25:52 2025 +0500
+
+    Added functionality for deleting a profile: the delete_profile handler has been refactored, login_and_save_token has been added, the api_delete_profile and get_token functions have been added to the service layer
+
+[33mcommit a33e83a01c78e30df908eeba36a599bc8bb7285b[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Mon Aug 4 20:14:41 2025 +0500
+
+    requierements updated
+
+[33mcommit c2e9488a611cf389cef7df64e09cbbb8d65e3ac5[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Mon Aug 4 19:26:03 2025 +0500
+
+    Functionality for receiving a token has been added to the 'login_and_save_token' handler
+
+[33mcommit 6e9a986ed4bad6e6193f5452024249a6e742f6bf[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Thu Jul 31 00:24:41 2025 +0500
+
+    Implemented user creation and profile editing via a bot with an FSM. Separation of business logic and service layer working with DRF API has been completed
+
+[33mcommit d7899dc05f6684ad8b1eaaed176e040cbac6f9da[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Thu Jul 10 21:08:07 2025 +0500
+
+    Добавляю интерфейс телеграм бота: FSM сценарий сбора анкерных данных юзера
+
+[33mcommit d1a446ea00a804323e7b1debc39a7f0bd2bb2df8[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Fri Apr 4 19:22:54 2025 +0500
+
+    before fixing fat models, thin views problem
+
+[33mcommit ca842ac9dda360e16384f62ac81bc95096aac40f[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Mon Feb 17 01:04:32 2025 +0500
+
+    'Spaced Repetition Algorithm' and bulk update added
+
+[33mcommit 7b1673bd31000e3e90e82ba29a4bfb10d6c18cdd[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Mon Feb 10 11:52:25 2025 +0500
+
+    Password Reset by backends.console.EmailBackend was added
+
+[33mcommit e090acac502c5fac3871c0da1e80ba214a073fb2[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Sat Feb 8 18:09:54 2025 +0500
+
+    АAuthentication, create/delete account
+
+[33mcommit ac3241ffae5477e3d48bf3ce6be36bd3aef14c75[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Fri Feb 7 00:55:02 2025 +0500
+
+    Service layer was added, wordcards duplication problem was fixed
+
+[33mcommit 4bd9f7ef2bcdf8f6a0a79f6b7e72b25e80291d23[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Tue Jan 21 23:28:17 2025 +0500
+
+    Word-transfer-parser and views-transfer were created
+
+[33mcommit 9ee5ff4525fec081653cb9243cb20973dd6ae28c[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Fri Jan 17 20:21:42 2025 +0500
+
+    added filtering by filter_queryset
+
+[33mcommit 27a2b81f8c69fbc7a46b83389b6cb05509834f8e[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Wed Jan 15 23:34:28 2025 +0500
+
+    Basic CRUD functionality added
+
+[33mcommit f165d1ecfc2ef697d0abe0651d5735da0b398709[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Sun Jan 5 23:23:58 2025 +0500
+
+    begin 6 tutor
+
+[33mcommit 32ac1b2d7c9e014434d21189a8ebd2682aa94bc8[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Fri Jan 3 13:50:00 2025 +0500
+
+    commit before 5-th tutor
+
+[33mcommit a61a80d87691efbddf73cae1fdb0707688b99040[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Thu Dec 26 16:45:48 2024 +0500
+
+    ДоÐКоÐНСостояние на момент кокончания tutor3
+
+[33mcommit 1c2645005d746fc85520b46e68f0337a4ad531bb[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Tue Dec 24 19:48:16 2024 +0500
+
+    API using class-based views
+
+[33mcommit 1e277d91bb9d20cbe87611598fe408d67d63dc79[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Tue Dec 24 18:12:15 2024 +0500
+
+    Ваш комÐДобавил тестовую запись в Readme
+
+[33mcommit 19312ccd0bf357a4aa3ea990c2b933edf718e3ed[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Tue Dec 24 17:06:44 2024 +0500
+
+    ÐAdded Readme file
+
+[33mcommit 99216ad20c1c5837eb378b97c913e9a5c2baff48[m
+Author: jaime <jaimelapluie13@gmail.com>
+Date:   Tue Dec 24 14:35:00 2024 +0500
+
+    Initial commit

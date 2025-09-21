@@ -8,7 +8,7 @@ from aiogram.filters import StateFilter
 from aiogram.utils.chat_action import ChatActionSender
 
 from tg_bot.config import bot_instance
-
+from tg_bot.services.api_users import get_existing_token
 
 start_router = Router()
 
@@ -27,7 +27,7 @@ async def start_handler(message: Message, state: FSMContext):
     if message.from_user.id not in (459483895, 240753763):
         await message.answer('Ошибка доступа')
         return
-
+    
     async with httpx.AsyncClient() as client:
         try:
             response = await client.get("http://127.0.0.1:8000/words/")

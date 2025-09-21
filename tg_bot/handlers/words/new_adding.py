@@ -19,6 +19,7 @@ STATE_CONFIG = {
         "next_state": AddWordProces.waiting_translation,
         "word_or_expression": lambda text: "выражения" if len(text.split()) > 1 else "слова"
     },
+    # TODO: если слово не указано выводится некорректное сообщение - ..'слова, которое вы введете позже' ""
     AddWordProces.waiting_translation: {
         "data_key": "translation",
         "prompt": lambda data: f'Введите перевод для '
@@ -43,6 +44,7 @@ STATE_CONFIG = {
         "next_state": AddWordProces.waiting_check_state,
      }
 }
+
 
 # TODO в handlers/profile/delete есть такая же функция. Объединить
 @adding_words_router.message(AuthStates.login_password)
@@ -258,6 +260,7 @@ async def handle_confirm_state(call: CallbackQuery, state: FSMContext):
         print('УРА! waiting_check_state_ok -> create_word -> добавлено')
         await state.clear()
     else:
+        print('Слово не добавлено')
         await call.message.answer(text=word)
 
 # TODO: handlers/adding_words.py — все message/callback хэндлеры

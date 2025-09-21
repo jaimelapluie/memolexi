@@ -27,24 +27,28 @@ async def create_word(word_data: dict, access_token: str) -> tuple[bool, str | N
     async with httpx.AsyncClient() as client:
         print('service -> create_word', word_data)
         print(access_token, type(access_token))
-        # TODO: посмотреть как из token достать  access_token
         url = "http://127.0.0.1:8000/words/"
         headers = {"Authorization": f"Bearer {access_token}"}
 
         try:
             response = await client.post(url=url, json=word_data, headers=headers)
-            response.raise_for_status()
+            status_code = response.status_code
+            print(status_code)
             print(response)
+            response.raise_for_status()
             return True, None
         
         except httpx.HTTPStatusError as err:
             try:
-                error_data = await err.response.json()
+                print('.....')
+                error_data = err.response.json()
                 error_msg = error_data.get("detail", "Неизвестная ошибка")
                 if not isinstance(error_msg, str):
                     error_msg = str(error_msg)
-            except Exception:
+            except httpx.HTTPStatusError:
                 error_msg = "Ошибка обработки ответа API"
+            except Exception:
+                error_msg = "Иная ошибка обработки ответа API"
             return False, error_msg
         
         except httpx.HTTPError as err:

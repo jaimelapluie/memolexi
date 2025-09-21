@@ -1,22 +1,54 @@
+import datetime
 from typing import Tuple
 import httpx
 # from aiogram.fsm.context import FSMContext
 from tg_bot.database.models import User
-
 # from tg_bot.bot import EditProfile
+import asyncio
 
 
-# TODO: надо дописать возможность обновления токена и подумать над объединением с get_token
+# TODO: подумать над объединением с get_token
 async def get_existing_token(telegram_id: int):
     """Функция получения токена из локальной БД - для бота"""
     
     token_or_none = User.get_or_none(User.telegram_id == telegram_id)
-    print(f"token_or_none={token_or_none}")
-    if token_or_none:
-        access_token = token_or_none.access_token
-        print(f"access_token получен: {access_token}")
-        return True, access_token
+    print(f"get_existing_token работает с tg_id={token_or_none}")
     
+    # запись с токеном в целом есть
+    if token_or_none:
+        now = datetime.datetime.now()
+        
+        # проверка, что access_token ещё действует с запасом в 10 секунд - на выполнение запроса
+        # TODO: ++++ а что если запись есть и просрочено не только access_token, но и refresh_token?
+        if token_or_none.token_expiry >= now + datetime.timedelta(seconds=10):
+            access_token = token_or_none.access_token
+            print(f"access_token получен: {access_token}")
+            return True, access_token
+        
+        # в случае просрочки токена, его следует обновить
+        else:
+            print('get_existing_token токен просрочен пробую обновить..')
+            is_updated, token_or_err = await update_token({'refresh': token_or_none.refresh_token})
+            # TODO: перенести блок put_token_to_local_db внутрь  update_token
+            if is_updated:
+                print('новый токен получен')
+                is_exist, user_data = await get_profile_by_telegram_id(telegram_id=telegram_id)
+                if is_exist:
+                    username = user_data.get('username')
+                    user_data = dict(telegram_id=telegram_id, username=username)
+                    
+                    # TODO: проверку добавить, что токен записался в локал БД
+                    is_done = await put_token_to_local_db(token_or_err, user_data)
+                    if is_done:
+                        access_token = token_or_err.get('access')
+                        print('токен получен и сохранен в БД')
+                        return True, access_token
+                    return False, 'put_token_to_local_db: в базу не сохранилось'
+                else:
+                    return False, "get_existing_token: Пользователь не зарегистрирован"
+                
+            return False, token_or_err
+
     return False, "Токен должен содержать непустой ключ 'access' типа строки"
     
 
@@ -25,19 +57,64 @@ async def put_token_to_local_db(token_data, user_data):
     """Полученные токены сохраняет в локальную БД.
     Если такой telegram_id существует, то перезаписывает?"""
     
-    print('Зашел в put_token_to_local_db')
-    access_token = token_data['access']
-    refresh_token = token_data['refresh']
+    def sync_db_operation():
+        print('Зашел в put_token_to_local_db')
+        access_token = token_data['access']
+        refresh_token = token_data['refresh']
+        
+        now = datetime.datetime.now()
+        token_expiry = now + datetime.timedelta(minutes=30)
+        print('token_expiry:', token_expiry)
     
-    try:
-        user_token = User.create(
-            telegram_id=user_data['telegram_id'],
-            username=user_data['username'],
-            access_token=access_token,
-            refresh_token=refresh_token)
-        return True
-    except:
-        return False
+        try:
+            telegram_id = user_data['telegram_id']
+            user_data_db = dict(
+                username=user_data['username'],
+                access_token=access_token,
+                refresh_token=refresh_token,
+                token_expiry=token_expiry)
+            print('user_data=', user_data_db )
+            user, created = User.get_or_create(telegram_id=telegram_id, defaults=user_data_db )
+            print('user, created=', user, created)
+            if not created:
+                print('вошел в if not created:')
+                User.update(**user_data_db ).where(User.telegram_id == telegram_id).execute()
+            return True
+        except Exception as e:
+            print('put_token_to_local_db Ошибка:', repr(e))
+            # traceback.print_exc()
+            return False
+    
+    return await asyncio.to_thread(sync_db_operation)
+
+
+async def update_token(token: dict) -> Tuple[bool, str | dict]:
+    # TODO: дописать документацию
+    
+    url = "http://127.0.0.1:8000/auth/token/refresh/"
+    
+    async with httpx.AsyncClient() as client:
+        try:
+            print(f'Пробую обновить токен... при помощи {token}')
+            response = await client.post(url=url, json=token)
+            print(response.status_code)
+            print(response.text)
+            response.raise_for_status()
+            refreshed_token = response.json()
+            return True, refreshed_token
+        
+        except httpx.HTTPStatusError as err:
+            print('refresh_token, A')
+            try:
+                error_msg = err.response.json().get("detail", "Неизвестная ошибка")
+            except:
+                error_msg = err.response.text
+            
+        except Exception as err:
+            print('refresh_token, B')
+            error_msg = err
+            
+    return False, error_msg
     
 
 # TODO: надо дописать возможность обновления токена и подумать над объединением с get_existing_token
