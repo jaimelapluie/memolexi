@@ -14,6 +14,7 @@ from tg_bot.states.profile import Form
 questionnaire_router = Router()
 
 
+# TODO: рефакторить код, убрать дублирующиеся фрагменты
 @questionnaire_router.message(Command('start_questionnaire'))
 async def start_questionnaire_process(message: Message, state: FSMContext):
     print('A')

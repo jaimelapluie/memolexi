@@ -9,10 +9,12 @@ from aiogram.filters import StateFilter
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from tg_bot.config import bot_instance
+from tg_bot.handlers.profile.delete import delete_profile_router
 from tg_bot.handlers.profile.edit import edit_profile_router
 from tg_bot.handlers.profile.info import info_profile_router
 from tg_bot.handlers.profile.registration import questionnaire_router
 from tg_bot.handlers.start import start_router
+from tg_bot.handlers.words.listing import viewing_words
 # from tg_bot.handlers.words.adding import adding_words_router
 from tg_bot.handlers.words.new_adding import adding_words_router
 from tg_bot.keyboards.menu_kb import set_default_commands
@@ -28,7 +30,10 @@ routers = [
     info_profile_router,
     questionnaire_router,
     edit_profile_router,
+    
     adding_words_router,
+    delete_profile_router,
+    viewing_words,
 ]
 for router in routers:
     dp.include_router(router)

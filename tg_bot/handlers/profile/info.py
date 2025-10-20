@@ -14,7 +14,7 @@ info_profile_router = Router()
 async def profile_checking(message: Message, state: FSMContext):
     """Информация о профиле + 2 кнопки: редактировать и удалить"""
     
-    print("Работает profile_checking")
+    print("\nРаботает profile_checking")
     await state.clear()
     
     curr_telegram_id = message.from_user.id

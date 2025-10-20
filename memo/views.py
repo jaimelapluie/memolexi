@@ -79,14 +79,10 @@ class WordListView(APIView):
     
     pagination_class = CastomLimitOffsetPagination  # CustomPageNumberPagination
     
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]  # [IsAuthenticated]
+    permission_classes = [IsAuthenticated] # [permissions.IsAuthenticatedOrReadOnly, ]  # [IsAuthenticated]
     authentication_classes = [JWTAuthentication, SessionAuthentication, BasicAuthentication]
     
     def get(self, request):
-        # queryset = (WordCards.objects
-        #             .select_related('part_of_speech')
-        #             .prefetch_related('wordcards_links__word_lists')
-        #             .all())
         print(request.user)
         queryset = (
             WordCards.objects.select_related("part_of_speech")
@@ -98,7 +94,8 @@ class WordListView(APIView):
                     ),
                 )
             )
-            .all()
+            .filter(author=request.user)
+            # .all()
         )
         
         # Применяем фильтры
@@ -115,6 +112,8 @@ class WordListView(APIView):
     
     def post(self, request, format=None):
         print(request.data)
+        # print(request.user)
+        # return
         serializer = WordSerializer(data=request.data)
         print(serializer)
         if serializer.is_valid():

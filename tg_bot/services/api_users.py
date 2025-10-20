@@ -12,7 +12,7 @@ async def get_existing_token(telegram_id: int):
     """Функция получения токена из локальной БД - для бота"""
     
     token_or_none = User.get_or_none(User.telegram_id == telegram_id)
-    print(f"get_existing_token работает с tg_id={token_or_none}")
+    print(f"\n зашел в get_existing_token, работаем с tg_id={telegram_id}")
     
     # запись с токеном в целом есть
     if token_or_none:
@@ -63,7 +63,8 @@ async def put_token_to_local_db(token_data, user_data):
         refresh_token = token_data['refresh']
         
         now = datetime.datetime.now()
-        token_expiry = now + datetime.timedelta(minutes=30)
+        # TODO: дублируются настройки. Отдельный хендлер, для автоматизации получения данных настроек?
+        token_expiry = now + datetime.timedelta(minutes=45)  # setting ->'ACCESS_TOKEN_LIFETIME': timedelta(minutes=45)
         print('token_expiry:', token_expiry)
     
         try:
@@ -73,12 +74,12 @@ async def put_token_to_local_db(token_data, user_data):
                 access_token=access_token,
                 refresh_token=refresh_token,
                 token_expiry=token_expiry)
-            print('user_data=', user_data_db )
+            print('user_data=', user_data_db)
             user, created = User.get_or_create(telegram_id=telegram_id, defaults=user_data_db )
             print('user, created=', user, created)
             if not created:
                 print('вошел в if not created:')
-                User.update(**user_data_db ).where(User.telegram_id == telegram_id).execute()
+                User.update(**user_data_db).where(User.telegram_id == telegram_id).execute()
             return True
         except Exception as e:
             print('put_token_to_local_db Ошибка:', repr(e))
@@ -133,7 +134,7 @@ async def get_token(user_data: dict) -> Tuple[bool, str]:
     
     ConnectionError: Если не удалось установить соединение с API.
     """
-    print('Зашел в get_token')
+    print('\n> Зашел в get_token')
     
     url = "http://127.0.0.1:8000/auth/token/"
     
@@ -277,7 +278,7 @@ async def get_profile_by_telegram_id(telegram_id) -> Tuple[bool, dict]:
     """Функция возвращает информацию о профиле"""
     
     url = f"http://127.0.0.1:8000/users/check_telegram_id/?telegram_id={telegram_id}"
-    print(f"Работаю по ссылке {url}")
+    print(f"\n get_profile_by_telegram_id работает по ссылке {url}")
     async with httpx.AsyncClient() as client:
         try:
             response = await client.get(url)

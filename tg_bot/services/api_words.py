@@ -2,6 +2,7 @@ import httpx
 from tg_bot.database.models import User
 import peewee as pw
 from tg_bot.database.models import User
+from tg_bot.services.api_users import get_existing_token
 
 
 async def get_words():
@@ -10,12 +11,32 @@ async def get_words():
         return response.json()["results"]
 
 
-async def get_words_for_user(user_id: int, page: int, page_size: int) -> list:
+async def get_users_words(user_id: int, page: int = 0, page_size: int = 5) -> tuple[bool, list[dict] | str]:
     async with httpx.AsyncClient() as client:
-        response = await client.get("http://127.0.0.1:8000/words/")
+        print('> зашел в get_users_words')
         
-        return response.json()["results"]
-
+        is_success, access_token = await get_existing_token(user_id)
+        if is_success:
+            url = "http://127.0.0.1:8000/words/"
+            headers = {"Authorization": f"Bearer {access_token}"}
+            print(headers)
+        else:
+            return False, 'в get_users_words токен не был получен'
+        
+        try:
+            response = await client.get(url=url, headers=headers)
+            # response = await client.get(url=url)
+            print(response.text)
+            response.raise_for_status()
+            print('получил слова')
+            return True, response.json()["results"]
+        
+        except httpx.HTTPStatusError as err:
+            error_data = err.response.json()
+            error_msg = error_data.get("detail", "Неизвестная ошибка")
+            print('ошибка получения слов')
+            return False, error_msg
+            
 
 # TODO: посмотреть какой тип (token)
 async def create_word(word_data: dict, access_token: str) -> tuple[bool, str | None]:

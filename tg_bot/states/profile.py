@@ -19,5 +19,9 @@ class EditProfile(StatesGroup):
     main_language = State()
 
 
+class DeleteProfile(StatesGroup):
+    delete_mode = State()
+    
+
 class AuthStates(StatesGroup):
     login_password = State()

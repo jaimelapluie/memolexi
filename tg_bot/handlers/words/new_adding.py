@@ -47,18 +47,18 @@ STATE_CONFIG = {
 
 
 # TODO в handlers/profile/delete есть такая же функция. Объединить
-@adding_words_router.message(AuthStates.login_password)
+@adding_words_router.message(AuthStates.login_password, ~F.text.startswith('/'))
 async def handle_login_and_save_token(message: Message, state: FSMContext):
     """Отрабатывет для получения токена"""
-
-    await message.answer("login_and_save_token: пробуем получить токен")
+    
+    print('\n Отрабатывает handle_login_and_save_token ')
+    await message.answer("handle_login_and_save_token: пробуем получить токен")
 
     telegram_id = message.from_user.id
     password = message.text
     is_exist, data = await get_profile_by_telegram_id(telegram_id=telegram_id)
     if is_exist:
-        print(data)
-        print(type(data))
+        print('get_profile_by_telegram_id получил профиль:', data)
         username = data.get("username")
     else:
         return await message.answer("Пользователь не найден")
@@ -80,10 +80,11 @@ async def handle_login_and_save_token(message: Message, state: FSMContext):
             await message.answer(text=f"Отлично, теперь вернемся к подтверждению действия по добавлению слова:",
                                  reply_markup=check_data_kb())
         else:
-            await message.answer(text='В login_and_save_token произошла ошибка. Токен не сохранен в локальную базу')
+            await message.answer(text='В handle_login_and_save_token произошла ошибка. '
+                                      'Токен не сохранен в локальную базу')
     else:
         await message.answer(f"Вероятно введен неверный пароль, повторите попытку")
-    print("Завершение работы login_and_save_token")
+    print("Завершение работы handle_login_and_save_token")
 
 
 def make_caption(data):

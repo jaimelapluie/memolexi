@@ -3,9 +3,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
 from tg_bot.keyboards.profile_kb import get_edit_delete_profile_kb
-from tg_bot.services.api_users import get_token, get_profile_by_telegram_id, api_delete_profile
-from tg_bot.states.profile import AuthStates
-
+from tg_bot.services.api_users import get_token, get_profile_by_telegram_id, api_delete_profile, get_existing_token
+from tg_bot.states.profile import AuthStates, DeleteProfile
 
 delete_profile_router = Router()
 
@@ -43,19 +42,22 @@ async def login_and_save_token(message: Message, state: FSMContext):
 async def delete_profile(call: CallbackQuery, state: FSMContext):
     """Профиль -> Отработка кнопки Удалить"""
     
-    # telegram_id = call.from_user.id
-    state_data = await state.get_data()
-    token = state_data.get("token")
-    print(f"delete_profile -> token = {token}")
-    print(f"state_data {state_data}")
+    print('\nОтрабатывает delete_profile')
+    await state.clear()
+    telegram_id = call.from_user.id
     
-    if token:
-        is_deleted, response = await api_delete_profile(token)
+    # запрос токена из локальной БД
+    is_token_exist, access_token = await get_existing_token(telegram_id)
+    print("получил от get_existing_token(telegram_id) token=", access_token)
+    
+    # TODO: добавить подтверджение удаления
+    if is_token_exist:
+        is_deleted, response = await api_delete_profile(access_token)
         if is_deleted:
             await call.message.answer(f"Профиль успешно удалён.", reply_markup=None)
         else:
             await call.message.answer(f"Что-то пошло не так. {response}", reply_markup=None)
-        
+    
     else:
         # токена нету, запрашиваю пароль
         await call.message.answer('Пожалуйста, введите пароль для подтверждения удаления профиля')

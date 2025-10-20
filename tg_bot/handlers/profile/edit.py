@@ -72,7 +72,7 @@ async def is_edit_profile_state(message: Message, state: FSMContext) -> bool:
     если да, то возвращает True, и хэндлер отрабатывает
     """
     
-    print("отработал is_edit_profile_state")
+    print("фильтр отработал is_edit_profile_state")
     return (await state.get_state()) in {
         EditProfile.username.state,
         EditProfile.password.state,
