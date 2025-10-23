@@ -19,22 +19,30 @@ from tg_bot.handlers.words.listing import viewing_words
 from tg_bot.handlers.words.new_adding import adding_words_router
 from tg_bot.keyboards.menu_kb import set_default_commands
 from database.models import init_db
-
+from tg_bot.middlewares.auth import AuthMiddleware
+from tg_bot.services.auth_service import auth_router
 
 load_dotenv()  # Загружает токен из .env файла
 dp = Dispatcher(storage=MemoryStorage())
 
+# Регистрирую middleware
+dp.message.middleware(AuthMiddleware())
+dp.callback_query.middleware(AuthMiddleware())
 
 routers = [
     start_router,
+    auth_router,  # новый
+    
     info_profile_router,
     questionnaire_router,
     edit_profile_router,
+    
     
     adding_words_router,
     delete_profile_router,
     viewing_words,
 ]
+
 for router in routers:
     dp.include_router(router)
 
