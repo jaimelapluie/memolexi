@@ -1,0 +1,108 @@
+[
+  {
+    "model": "references.language",
+    "pk": 1,
+    "fields": {
+      "code": "eng",
+      "name": "English",
+      "name_native": "English",
+      "flag_emoji": "🇬🇧"
+    }
+  },
+  {
+    "model": "references.language",
+    "pk": 2,
+    "fields": {
+      "code": "spa",
+      "name": "Spanish",
+      "name_native": "Español",
+      "flag_emoji": "🇪🇸"
+    }
+  },
+  {
+    "model": "references.language",
+    "pk": 3,
+    "fields": {
+      "code": "fra",
+      "name": "French",
+      "name_native": "Français",
+      "flag_emoji": "🇫🇷"
+    }
+  },
+  {
+    "model": "references.language",
+    "pk": 4,
+    "fields": {
+      "code": "deu",
+      "name": "German",
+      "name_native": "Deutsch",
+      "flag_emoji": "🇩🇪"
+    }
+  },
+  {
+    "model": "references.language",
+    "pk": 5,
+    "fields": {
+      "code": "ita",
+      "name": "Italian",
+      "name_native": "Italiano",
+      "flag_emoji": "🇮🇹"
+    }
+  },
+  {
+    "model": "references.partofspeech",
+    "pk": 1,
+    "fields": {
+      "part_of_speech": "noun"
+    }
+  },
+  {
+    "model": "references.partofspeech",
+    "pk": 2,
+    "fields": {
+      "part_of_speech": "verb"
+    }
+  },
+  {
+    "model": "references.partofspeech",
+    "pk": 3,
+    "fields": {
+      "part_of_speech": "adjective"
+    }
+  },
+  {
+    "model": "references.partofspeech",
+    "pk": 4,
+    "fields": {
+      "part_of_speech": "adverb"
+    }
+  },
+  {
+    "model": "references.partofspeech",
+    "pk": 5,
+    "fields": {
+      "part_of_speech": "preposition"
+    }
+  },
+  {
+    "model": "references.partofspeech",
+    "pk": 6,
+    "fields": {
+      "part_of_speech": "pronoun"
+    }
+  },
+  {
+    "model": "references.partofspeech",
+    "pk": 7,
+    "fields": {
+      "part_of_speech": "conjunction"
+    }
+  },
+  {
+    "model": "references.partofspeech",
+    "pk": 8,
+    "fields": {
+      "part_of_speech": "interjection"
+    }
+  }
+]

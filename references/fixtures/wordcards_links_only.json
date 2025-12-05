@@ -1,0 +1,605 @@
+[
+{
+  "model": "memo.wordcardslist",
+  "pk": 1,
+  "fields": {
+    "word_card": 2,
+    "word_lists": 1,
+    "added_at": "2025-09-05T17:43:28.669Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 2,
+  "fields": {
+    "word_card": 3,
+    "word_lists": 2,
+    "added_at": "2025-09-05T18:07:37.587Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 3,
+  "fields": {
+    "word_card": 4,
+    "word_lists": 1,
+    "added_at": "2025-09-05T18:09:39.044Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 4,
+  "fields": {
+    "word_card": 5,
+    "word_lists": 2,
+    "added_at": "2025-09-05T18:11:22.230Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 5,
+  "fields": {
+    "word_card": 6,
+    "word_lists": 3,
+    "added_at": "2025-09-18T17:58:00.735Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 6,
+  "fields": {
+    "word_card": 7,
+    "word_lists": 1,
+    "added_at": "2025-09-20T18:14:14.072Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 7,
+  "fields": {
+    "word_card": 8,
+    "word_lists": 1,
+    "added_at": "2025-09-21T11:56:35.317Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 8,
+  "fields": {
+    "word_card": 9,
+    "word_lists": 1,
+    "added_at": "2025-09-21T14:15:32.738Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 9,
+  "fields": {
+    "word_card": 10,
+    "word_lists": 2,
+    "added_at": "2025-09-21T14:26:02.831Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 10,
+  "fields": {
+    "word_card": 11,
+    "word_lists": 2,
+    "added_at": "2025-09-21T14:27:41.836Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 11,
+  "fields": {
+    "word_card": 12,
+    "word_lists": 1,
+    "added_at": "2025-09-21T19:41:45.336Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 12,
+  "fields": {
+    "word_card": 13,
+    "word_lists": 1,
+    "added_at": "2025-09-22T20:57:35.942Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 13,
+  "fields": {
+    "word_card": 14,
+    "word_lists": 1,
+    "added_at": "2025-10-18T11:17:13.278Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 15,
+  "fields": {
+    "word_card": 16,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.328Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 16,
+  "fields": {
+    "word_card": 17,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.348Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 17,
+  "fields": {
+    "word_card": 18,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.368Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 18,
+  "fields": {
+    "word_card": 19,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.389Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 19,
+  "fields": {
+    "word_card": 20,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.409Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 20,
+  "fields": {
+    "word_card": 21,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.429Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 21,
+  "fields": {
+    "word_card": 22,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.450Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 22,
+  "fields": {
+    "word_card": 23,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.471Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 23,
+  "fields": {
+    "word_card": 24,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.492Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 24,
+  "fields": {
+    "word_card": 25,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.513Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 25,
+  "fields": {
+    "word_card": 26,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.532Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 26,
+  "fields": {
+    "word_card": 27,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.551Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 27,
+  "fields": {
+    "word_card": 28,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.571Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 28,
+  "fields": {
+    "word_card": 29,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.591Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 29,
+  "fields": {
+    "word_card": 30,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.610Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 30,
+  "fields": {
+    "word_card": 31,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.631Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 31,
+  "fields": {
+    "word_card": 32,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.651Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 32,
+  "fields": {
+    "word_card": 33,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.672Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 33,
+  "fields": {
+    "word_card": 34,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.691Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 34,
+  "fields": {
+    "word_card": 35,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.713Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 35,
+  "fields": {
+    "word_card": 36,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.731Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 36,
+  "fields": {
+    "word_card": 37,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.756Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 37,
+  "fields": {
+    "word_card": 38,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.777Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 38,
+  "fields": {
+    "word_card": 39,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.798Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 39,
+  "fields": {
+    "word_card": 40,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.818Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 40,
+  "fields": {
+    "word_card": 41,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.839Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 41,
+  "fields": {
+    "word_card": 42,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.862Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 42,
+  "fields": {
+    "word_card": 43,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.882Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 43,
+  "fields": {
+    "word_card": 44,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.902Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 44,
+  "fields": {
+    "word_card": 45,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.923Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 45,
+  "fields": {
+    "word_card": 46,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.943Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 46,
+  "fields": {
+    "word_card": 47,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.964Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 47,
+  "fields": {
+    "word_card": 48,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:53.990Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 48,
+  "fields": {
+    "word_card": 49,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.013Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 49,
+  "fields": {
+    "word_card": 50,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.038Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 50,
+  "fields": {
+    "word_card": 51,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.059Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 51,
+  "fields": {
+    "word_card": 52,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.083Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 52,
+  "fields": {
+    "word_card": 53,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.104Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 53,
+  "fields": {
+    "word_card": 54,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.125Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 54,
+  "fields": {
+    "word_card": 55,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.146Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 55,
+  "fields": {
+    "word_card": 56,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.167Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 56,
+  "fields": {
+    "word_card": 57,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.189Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 57,
+  "fields": {
+    "word_card": 58,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.211Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 58,
+  "fields": {
+    "word_card": 59,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.231Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 59,
+  "fields": {
+    "word_card": 60,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.253Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 60,
+  "fields": {
+    "word_card": 61,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.275Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 61,
+  "fields": {
+    "word_card": 62,
+    "word_lists": 5,
+    "added_at": "2025-10-27T18:14:54.295Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 62,
+  "fields": {
+    "word_card": 63,
+    "word_lists": 1,
+    "added_at": "2025-10-29T15:52:53.366Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 64,
+  "fields": {
+    "word_card": 65,
+    "word_lists": 2,
+    "added_at": "2025-10-29T19:48:04.057Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 70,
+  "fields": {
+    "word_card": 71,
+    "word_lists": 4,
+    "added_at": "2025-11-07T19:42:49.362Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 71,
+  "fields": {
+    "word_card": 72,
+    "word_lists": 4,
+    "added_at": "2025-11-07T19:45:16.726Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 81,
+  "fields": {
+    "word_card": 82,
+    "word_lists": 6,
+    "added_at": "2025-11-08T14:47:08.275Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 82,
+  "fields": {
+    "word_card": 83,
+    "word_lists": 2,
+    "added_at": "2025-11-20T19:22:54.055Z"
+  }
+},
+{
+  "model": "memo.wordcardslist",
+  "pk": 83,
+  "fields": {
+    "word_card": 84,
+    "word_lists": 2,
+    "added_at": "2025-11-20T19:23:37.342Z"
+  }
+}
+]

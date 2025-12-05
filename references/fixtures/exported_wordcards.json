@@ -1,0 +1,1294 @@
+[
+  {
+    "model": "memo.wordcards",
+    "pk": 1,
+    "fields": {
+      "word": "test",
+      "translation": "Тест",
+      "example": "Пример",
+      "source": "Источник",
+      "reverso_url": "-",
+      "picture": null,
+      "author_id": 20,
+      "time_create": "2025-08-07T11:08:25.976320",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.0,
+      "next_review": null
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 2,
+    "fields": {
+      "word": "abc",
+      "translation": "alphabet",
+      "example": "Кек",
+      "source": "Ук",
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-09-05T17:43:28.602445",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-05"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 3,
+    "fields": {
+      "word": "Mierda",
+      "translation": "Пизда",
+      "example": "В жопе",
+      "source": "Из жопы",
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 22,
+      "time_create": "2025-09-05T18:07:37.527818",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-05"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 4,
+    "fields": {
+      "word": "Wolf",
+      "translation": "Вокл",
+      "example": "Волк не пёс",
+      "source": "Сериал",
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-09-05T18:09:38.991629",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-05"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 5,
+    "fields": {
+      "word": "Coño",
+      "translation": "Blyat",
+      "example": "Coño пидарас ебаный",
+      "source": "Из жопы",
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 22,
+      "time_create": "2025-09-05T18:11:22.189091",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-05"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 6,
+    "fields": {
+      "word": "Health",
+      "translation": "Здоровье",
+      "example": "good health",
+      "source": "статья",
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 23,
+      "time_create": "2025-09-18T17:58:00.702781",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-18"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 7,
+    "fields": {
+      "word": "Новый тест",
+      "translation": "Тест",
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-09-20T18:14:14.060569",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-20"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 8,
+    "fields": {
+      "word": "Milk",
+      "translation": "Молоко",
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-09-21T11:56:35.305503",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-21"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 9,
+    "fields": {
+      "word": "Google.com",
+      "translation": "Проверка ссылок",
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-09-21T14:15:32.726157",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-21"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 10,
+    "fields": {
+      "word": "Dick",
+      "translation": "Хуй",
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 22,
+      "time_create": "2025-09-21T14:26:02.821024",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-21"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 11,
+    "fields": {
+      "word": "Zhopa",
+      "translation": "Жопа",
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 22,
+      "time_create": "2025-09-21T14:27:41.795273",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-21"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 12,
+    "fields": {
+      "word": "Awkward",
+      "translation": "Неловко",
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-09-21T19:41:45.324503",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-22"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 13,
+    "fields": {
+      "word": "Success",
+      "translation": "Успех",
+      "example": "My success",
+      "source": "Жизнь",
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-09-22T20:57:35.931701",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-09-23"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 14,
+    "fields": {
+      "word": "Paragliding",
+      "translation": "Парапланец",
+      "example": "I am flying",
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-18T11:17:13.255743",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-18"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 16,
+    "fields": {
+      "word": "unfortunately",
+      "translation": "к сожалению",
+      "example": "And _unfortunately_ that effectively ends your relationship with him. (И _к сожалению_ это означает конец ваших с ним отношений.)",
+      "source": null,
+      "reverso_url": "https://context.reverso.net/translation/english-russian/unfortunately",
+      "picture": "",
+      "author_id": 1,
+      "time_create": "2025-10-27T18:14:53.310525",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 17,
+    "fields": {
+      "word": "suitable",
+      "translation": "подходящий",
+      "example": "This allows everyone who wants to choose a _suitable_ taste favorite dessert. (Это позволяет каждому желающему выбрать для себя _подходящий_ вкус любимого десерта.)",
+      "source": null,
+      "reverso_url": "https://context.reverso.net/translation/english-russian/suitable",
+      "picture": "",
+      "author_id": 1,
+      "time_create": "2025-10-27T18:14:53.338908",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 18,
+    "fields": {
+      "word": "convenient",
+      "translation": "удобный",
+      "example": "The player includes a _convenient_ multimedia manager. (Проигрыватель включает в себя _удобный_ менеджер мультимедиа.)",
+      "source": null,
+      "reverso_url": "https://context.reverso.net/translation/english-russian/convenient",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.358439",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 19,
+    "fields": {
+      "word": "despite",
+      "translation": "несмотря на",
+      "example": "This, _despite_ the increase in education levels. (И это _несмотря на_ рост уровня образования.)",
+      "source": null,
+      "reverso_url": "https://context.reverso.net/translation/english-russian/despite",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.379020",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 20,
+    "fields": {
+      "word": "to ensure that",
+      "translation": "обеспечить _**|** на обеспечение, обеспечивающие_",
+      "example": "want to filter the queryset _to ensure that_ only results relevant to the",
+      "source": "[django-rest-framework.org](https://www.django-rest-framework.org/api-guide/filtering)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/to+ensure+that",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.398936",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 21,
+    "fields": {
+      "word": "entire",
+      "translation": "целый _**|** полный, цельный_",
+      "example": "views is to return the _entire_ queryset for a model manager",
+      "source": "[django-rest-framework.org](https://www.django-rest-framework.org/api-guide/filtering)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/entire",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.419873",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 22,
+    "fields": {
+      "word": "to consider",
+      "translation": "рассматривать _**|** учесть, подумать о_",
+      "example": "a similar set of trade-offs _to consider_ as when using class-based views",
+      "source": "[django-rest-framework.org](https://www.django-rest-framework.org/tutorial/6-viewsets-and-routers/#refactoring-to-use-viewsets)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/to+consider",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.440072",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 23,
+    "fields": {
+      "word": "more concise",
+      "translation": "более кратким _**|** более лаконичным, более сжатым_",
+      "example": "It's a little _more concise_, and the code now feels very similar",
+      "source": "[django-rest-framework.org](https://www.django-rest-framework.org/tutorial/2-requests-and-responses/#wrapping-api-views)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/more+concise",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.459850",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 24,
+    "fields": {
+      "word": "substitute",
+      "translation": "замена _**|** заменитель, альтернатива_",
+      "example": "Substituting a custom User model¶",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/topics/auth/customizing/#extending-the-existing-user-model)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/substitute",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.481115",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 25,
+    "fields": {
+      "word": "Define",
+      "translation": "определить _**|** определять, определяться_",
+      "example": "# _Define_ an inline admin descriptor for Employee model",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/topics/auth/customizing/#extending-the-existing-user-model)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/Define",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.504385",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 26,
+    "fields": {
+      "word": "assume",
+      "translation": "предположить _**|** предполагать, считать_",
+      "example": "Assuming you have an application with an app_label foo and a",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/topics/auth/default/#permissions-and-authorization)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/assume",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.522873",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 27,
+    "fields": {
+      "word": "merely",
+      "translation": "просто",
+      "example": "They _merely_ want to save their proxy army from annihilation. (Они _просто_ хотят спасти свою марионеточную армию от уничтожения.)",
+      "source": null,
+      "reverso_url": "https://context.reverso.net/translation/english-russian/merely",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.542540",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 28,
+    "fields": {
+      "word": "is generally referred to as",
+      "translation": "обычно называют _**|** обычно называется, как правило, называют_",
+      "example": "authentication and authorization together and _is generally referred to as_ the authentication system, as these",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/topics/auth/default)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/is+generally+referred+to+as",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.561694",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 29,
+    "fields": {
+      "word": "has evolved to",
+      "translation": "превратилась в _**|** развился до, развилась до_",
+      "example": "This configuration _has evolved to_ serve the most common project needs, handling a",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/topics/auth/default)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/has+evolved+to",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.581761",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 30,
+    "fields": {
+      "word": "Beware",
+      "translation": "остерегаться _**|** беречься, опасаться_",
+      "example": "_Beware_ that not all browsers support entering localized numbers in number",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/forms/widgets/#numberinput)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/Beware",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.601080",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 31,
+    "fields": {
+      "word": "inherit",
+      "translation": "наследовать _**|** унаследовать, наследоваться_",
+      "example": "Form and ModelForm actually _inherit_ common functionality from a (private) BaseForm",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/topics/forms)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/inherit",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.621489",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 32,
+    "fields": {
+      "word": "to provide",
+      "translation": "представить _**|** оказывать, оказать_",
+      "example": "You need _to provide_ the title and parameter_name attributes, and override the",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/contrib/admin/filters/#using-a-simplelistfilter)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/to+provide",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.641458",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 33,
+    "fields": {
+      "word": "appear",
+      "translation": "появляться _**|** появиться, казаться_",
+      "example": "can define list filters that _appear_ in the right sidebar of",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/contrib/admin/filters/#modeladmin-list-filters)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/appear",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.662244",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 34,
+    "fields": {
+      "word": "can define",
+      "translation": "можно определить _**|** можем определить, может определить_",
+      "example": "ModelAdmin classes _can define_ list filters that appear in the right sidebar",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/contrib/admin/filters/#modeladmin-list-filters)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/can+define",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.682840",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 35,
+    "fields": {
+      "word": "define",
+      "translation": "определить _**|** определять, определяться_",
+      "example": "ModelAdmin classes can _define_ list filters that appear in the right",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/contrib/admin/filters/#modeladmin-list-filters)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/define",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.701657",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 36,
+    "fields": {
+      "word": "indices",
+      "translation": "индексы _**|** индексов, показателей_",
+      "example": "The _indices_ are 0-based and the step argument to slice is",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/models/expressions)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/indices",
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-10-27T18:14:53.722760",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 37,
+    "fields": {
+      "word": "looping",
+      "translation": "цикл _**|** зацикливание, петля_",
+      "example": "into Python from the database, _looping_ over them, incrementing the field",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/models/expressions)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/looping",
+      "picture": "",
+      "author_id": 1,
+      "time_create": "2025-10-27T18:14:53.746740",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 38,
+    "fields": {
+      "word": "as above",
+      "translation": "как указано выше _**|** сверху, что и выше_",
+      "example": "in operations on single instances _as above_, F() can be used on",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/models/expressions)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/as+above",
+      "picture": "",
+      "author_id": 1,
+      "time_create": "2025-10-27T18:14:53.766459",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 39,
+    "fields": {
+      "word": "increment",
+      "translation": "прирост _**|** приращение, увеличение_",
+      "example": "which instructs the database to _increment_ the database field represented by",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/models/expressions)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/increment",
+      "picture": "",
+      "author_id": 1,
+      "time_create": "2025-10-27T18:14:53.788576",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 40,
+    "fields": {
+      "word": "Although",
+      "translation": "хотя _**|** но, однако_",
+      "example": "_Although_ reporter.stories_filed = F('stories_filed') + 1 looks like a normal Python",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/models/expressions)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/Although",
+      "picture": "",
+      "author_id": 1,
+      "time_create": "2025-10-27T18:14:53.809040",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 41,
+    "fields": {
+      "word": "Instead",
+      "translation": "вместо _**|** вместо этого, напротив_",
+      "example": "_Instead_, Django uses the F() object to generate an SQL expression",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/models/expressions)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/Instead",
+      "picture": "",
+      "author_id": 1,
+      "time_create": "2025-10-27T18:14:53.829941",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 42,
+    "fields": {
+      "word": "perform",
+      "translation": "выполнять _**|** выполнить, выступать_",
+      "example": "to model field values and _perform_ database operations using them without",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/models/expressions)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/perform",
+      "picture": "",
+      "author_id": 1,
+      "time_create": "2025-10-27T18:14:53.850718",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 43,
+    "fields": {
+      "word": "actually occurs",
+      "translation": "на самом деле происходит _**|** действительно происходит, фактически происходит_",
+      "example": "No database activity _actually occurs_ until you do something to evaluate the",
+      "source": "[docs.djangoproject.com](https://docs.djangoproject.com/en/5.1/ref/models/querysets)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/actually+occurs",
+      "picture": "",
+      "author_id": 1,
+      "time_create": "2025-10-27T18:14:53.871233",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 44,
+    "fields": {
+      "word": "rather than letting",
+      "translation": "вместо того чтобы позволить _**|** а не позволять, а не позволить_",
+      "example": "should just walk off _rather than letting_",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=iMAUMi8bxaQ)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/rather+than+letting",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:53.892277",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 45,
+    "fields": {
+      "word": "rather than",
+      "translation": "вместо _**|** нежели, вместо того чтобы_",
+      "example": "should just walk off _rather than_ letting",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=iMAUMi8bxaQ)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/rather+than)adv",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:53.914438",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 46,
+    "fields": {
+      "word": "encounter in",
+      "translation": "столкнуться в _**|** сталкиваться в, столкнуться при_",
+      "example": "_encounter in_ and how",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=iMAUMi8bxaQ)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/encounter+in",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:53.933602",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 47,
+    "fields": {
+      "word": "encounter",
+      "translation": "сталкиваться с _**|** встретить, столкнуться_",
+      "example": "_encounter_ in and how",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=iMAUMi8bxaQ)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/encounter",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:53.954804",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 48,
+    "fields": {
+      "word": "introduce",
+      "translation": "ввести _**|** представить, вводить_",
+      "example": "video we will _introduce_",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=iMAUMi8bxaQ)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/introduce",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:53.979937",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 49,
+    "fields": {
+      "word": "Once upon",
+      "translation": "Once Upon _**|** когда-то, время от_",
+      "example": "_Once upon_",
+      "source": "[x.com](https://x.com/home)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/Once+upon",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.002961",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 50,
+    "fields": {
+      "word": "Once upon a dream",
+      "translation": "Однажды во сне _**|** Once Upon a Dream, ..._",
+      "example": "_Once upon a dream_",
+      "source": "[x.com](https://x.com/home)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/Once+upon+a+dream",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.025014",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 51,
+    "fields": {
+      "word": "relate",
+      "translation": "относиться _**|** касаться, связать_",
+      "example": "Зачем нужен _relate_d_name: Если ты используешь _relate_d_name='posts', то теперь для получения",
+      "source": "[chatgpt.com](https://chatgpt.com/g/g-cKXjWStaE-python/c/66e46dcf-af18-8005-bbc5-24d9f27c9787)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/relate",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.048981",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 52,
+    "fields": {
+      "word": "delay",
+      "translation": "Задержка, промедление, отсрочка",
+      "example": "_delay_",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=tiTK35xacP0)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/delay",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.071983",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 53,
+    "fields": {
+      "word": "reusable",
+      "translation": "многоразовый _**|** многократного использования, повторно используемый_",
+      "example": "django-taggit is a _reusable_ Django application designed to make adding tagging",
+      "source": "[django-taggit.readthedocs.io](https://django-taggit.readthedocs.io/en/latest/index.html#)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/reusable",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.093016",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 54,
+    "fields": {
+      "word": "be aware of",
+      "translation": "быть в курсе _**|** сознавать, помнить об_",
+      "example": "He must _be aware of_ everything. (Он должен _быть в курсе_ всего.)",
+      "source": null,
+      "reverso_url": "https://context.reverso.net/translation/english-russian/be+aware+of",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.115133",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 55,
+    "fields": {
+      "word": "amenity",
+      "translation": "удобство _**|** прелесть, приятность_",
+      "example": "However, if you're staying at budget hostels or Airbnbs, these amenities",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=VldXL0Py4lg&t=19s)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/amenity",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.136374",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 56,
+    "fields": {
+      "word": "sleeve",
+      "translation": "рукав _**|** втулка, гильза_",
+      "example": "It is quite hot today, why are you wearing long _sleeve_?",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=HzAukhbwz0g)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/sleeve",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.156742",
+      "part_of_speech_id": 1,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 57,
+    "fields": {
+      "word": "revealing",
+      "translation": "выявление _**|** раскрытие, разглашение_",
+      "example": "more tourists, and some wear _revealing_ clothes, do you take a",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=HzAukhbwz0g)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/revealing",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.179254",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 58,
+    "fields": {
+      "word": "complain",
+      "translation": "Жаловаться, пожаловаться, подать жалобу",
+      "example": "You _complain_ed about too much skin but you are wearing a",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=HzAukhbwz0g)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/complain",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.200296",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 59,
+    "fields": {
+      "word": "embarrassing",
+      "translation": "неловкий _**|** смущающий, неудобный_",
+      "example": "I think that would be _embarrassing_ - We have to wear",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=HzAukhbwz0g)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/embarrassing",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.220424",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 60,
+    "fields": {
+      "word": "reveal",
+      "translation": "раскрыть _**|** раскрывать, выявить_",
+      "example": "I think clothes that _reveal_ too much skin.",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=HzAukhbwz0g)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/reveal",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.241954",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 61,
+    "fields": {
+      "word": "notable",
+      "translation": "заметный _**|** известный, примечательный_",
+      "example": null,
+      "source": null,
+      "reverso_url": "https://context.reverso.net/translation/english-russian/notable",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.264885",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 62,
+    "fields": {
+      "word": "mention",
+      "translation": "упомянуть _**|** упоминать, отметить_",
+      "example": "Other notable _mention_s are Sushi Zanmai,",
+      "source": "[youtube.com](https://www.youtube.com/watch?v=2_Ghl3I9PpM)",
+      "reverso_url": "https://context.reverso.net/translation/english-russian/mention",
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-27T18:14:54.284948",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-27"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 63,
+    "fields": {
+      "word": "Pie",
+      "translation": "Пирог",
+      "example": "Cream pie watching without add",
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 20,
+      "time_create": "2025-10-29T15:52:53.345313",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-29"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 65,
+    "fields": {
+      "word": "Vieja puta mala",
+      "translation": "Fgvkgjfjfufkfkglgkfjfufjfkfigigigigigigkgkgkgkgjfjfjfifkgig",
+      "example": "/view_words",
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 22,
+      "time_create": "2025-10-29T19:48:04.046199",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-10-30"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 71,
+    "fields": {
+      "word": "Вжух",
+      "translation": "Wzhuh",
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 17,
+      "time_create": "2025-11-07T19:42:49.325266",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-11-08"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 72,
+    "fields": {
+      "word": "Awkward",
+      "translation": null,
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 17,
+      "time_create": "2025-11-07T19:45:16.716320",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-11-08"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 82,
+    "fields": {
+      "word": "Денис",
+      "translation": "Бог виноделия",
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 24,
+      "time_create": "2025-11-08T14:47:08.230103",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-11-08"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 83,
+    "fields": {
+      "word": "G",
+      "translation": null,
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 22,
+      "time_create": "2025-11-20T19:22:54.036318",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-11-21"
+    }
+  },
+  {
+    "model": "memo.wordcards",
+    "pk": 84,
+    "fields": {
+      "word": null,
+      "translation": "T",
+      "example": null,
+      "source": null,
+      "reverso_url": null,
+      "picture": "",
+      "author_id": 22,
+      "time_create": "2025-11-20T19:23:37.305699",
+      "part_of_speech_id": null,
+      "interval_days": 1,
+      "repetition_level": 1,
+      "easiness_factor": 2.5,
+      "next_review": "2025-11-21"
+    }
+  }
+]
