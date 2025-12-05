@@ -1,9 +1,11 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 from datetime import timedelta, datetime
 from django.contrib.auth import get_user_model
 
-from memo import constants
+from common.validators import validate_not_empty
+from common import constants
+
+User = get_user_model()
 
 # from pygments.lexers import get_all_lexers
 # from pygments.styles import get_all_styles
@@ -47,22 +49,19 @@ from memo import constants
 #         super().save(*args, **kwargs)
 
 
-def validate_not_empty(value):
-    if not value.strip():
-        raise ValidationError("Название не может быть пустым !")
-    
-
 class WordCards(models.Model):
-    word = models.CharField(max_length=255, validators=[validate_not_empty])
+    word = models.CharField(max_length=255, blank=True, null=True, default=None)
     translation = models.TextField(max_length=3000, blank=True, null=True)
     example = models.TextField(max_length=255, blank=True, null=True)
     source = models.CharField(max_length=300, blank=True, null=True)
     reverso_url = models.CharField(max_length=300, blank=True, null=True)
     picture = models.ImageField(blank=True, null=True)
-    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, related_name='words')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='words')
     time_create = models.DateTimeField(auto_now_add=True)
-    part_of_speech = models.ForeignKey('PartOfSpeech', blank=True, null=True, on_delete=models.PROTECT,
-                                       related_name='words')
+    part_of_speech = models.ForeignKey('references.PartOfSpeech', blank=True, null=True,
+                                       on_delete=models.PROTECT, related_name='words')
+    language = models.ForeignKey('references.Language', on_delete=models.SET_NULL, null=True,
+                                 blank=True, related_name='words')
     
     # Spaced Repetition System Params
     interval_days = models.PositiveIntegerField(default=1)
@@ -71,8 +70,7 @@ class WordCards(models.Model):
     next_review = models.DateField(default=datetime.today)
     
     def __str__(self):
-        # print(self, type(self), self.word)
-        return self.word
+        return self.word or "Без названия"
     # from memo.views import WordCards as wc
     # q = wc.objects.all()
     
@@ -160,14 +158,3 @@ class WordList(models.Model):
         verbose_name = "Список слов"
         verbose_name_plural = "Списки слов"
         unique_together = ('name', 'author')
-        
-        
-class PartOfSpeech(models.Model):
-    part_of_speech = models.CharField(max_length=50, null=True, default=None, validators=[validate_not_empty])
-    
-    def __str__(self):
-        return self.part_of_speech
-
-    class Meta:
-        verbose_name = "Часть речи"
-        verbose_name_plural = "Части речи"

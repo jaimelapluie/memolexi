@@ -1,6 +1,7 @@
 # from memo.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 from django.contrib.auth.models import Group, User
-from memo.models import WordCards, PartOfSpeech, WordCardsList, WordList, ReviewHistory
+from memo.models import WordCards, WordCardsList, WordList, ReviewHistory
+from references.models import PartOfSpeech
 from rest_framework import serializers
 
 from django.utils.timezone import now
