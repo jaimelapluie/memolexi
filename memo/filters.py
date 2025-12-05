@@ -1,5 +1,5 @@
 import django_filters
-from django.db.models import Func, IntegerField
+from django.db.models import Func, IntegerField, Q
 from django.db.models.functions import Length
 from rest_framework.filters import BaseFilterBackend, OrderingFilter
 
@@ -19,31 +19,58 @@ class WordFilter2(django_filters.FilterSet):
 
 class WordFilter1(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
-        print('def filter_queryset')
+        print('\n WordFilter1 -> def filter_queryset')
         params = request.query_params.dict()
-        author = params.get('author')
-        part_of_speech = params.get('part_of_speech')
-        word = params.get('word')
-        word_starts = params.get('starts')
         
-        if not any([author, part_of_speech, word, word_starts]):
+        author = params.get('author')
+        word = params.get('word')
+        
+        parts_of_speech = params.get('parts_of_speech')
+        word_starts = params.get('word_starts')
+        languages = params.get('languages')
+        
+        print(f'{params=}')
+        print(f'{author=}')
+        print(f'{word=}')
+        print(f'{parts_of_speech=}')
+        print(f'{word_starts=}')
+        print(f'{languages=}')
+        
+        if not any([author, parts_of_speech, word, word_starts, languages]):
+            print(f'Параметров нет\n'
+                  f'any([author, parts_of_speech, word, word_starts, languages])='
+                  f'{any([author, parts_of_speech, word, word_starts, languages])}\n'
+                  f'{[author, parts_of_speech, word, word_starts, languages]}')
             return queryset
         
         if author:
             queryset = queryset.filter(author=author)
         
-        if part_of_speech:
-            if part_of_speech.isdigit():
-                queryset = queryset.filter(part_of_speech=part_of_speech)
-            else:
-                queryset = queryset.filter(part_of_speech__part_of_speech=part_of_speech)
-        
+        if parts_of_speech:
+            q_objects = Q()
+            parts = [part.strip().lower() for part in parts_of_speech.split(',') if part.strip()]
+            for part in parts:
+                q_objects |= Q(part_of_speech__part_of_speech=part)
+            queryset = queryset.filter(q_objects)
+            print(f'{q_objects=}')
+            print(f'{queryset=}')
+            
         if word:
             queryset = queryset.filter(word=word)
-        
+            
+        # Фильтр по первой букве: word__istartswith=A,B,C
         if word_starts:
-            queryset = queryset.filter(word__startswith=word_starts)
-        
+            letters = [letter.strip().upper() for letter in word_starts.split(',') if letter.strip()]
+            print(letters)
+            
+            if letters:
+                # Q объект для OR. q_objects=<Q: (OR: ('word__istartswith', 'C'), ('word__istartswith', 'P'))>
+                q_objects = Q()
+                for letter in letters:
+                    q_objects |= Q(word__istartswith=letter)
+                queryset = queryset.filter(q_objects)
+                print(f'{q_objects=}')
+           
         return queryset
 
 
@@ -53,7 +80,9 @@ class CustomOrderingFilter(OrderingFilter):
         """
         Переопределяю фильтрацию, чтобы прокинуть аннотацию для длины слова
         """
+        print(f'{queryset=}')
         ordering = self.get_ordering(request, queryset, view)
+        print(f'{ordering=}')
         
         if ordering and any(field.lstrip('-') == 'length' for field in ordering):
             queryset = queryset.annotate(
@@ -70,6 +99,7 @@ class CustomOrderingFilter(OrderingFilter):
         """
         # Получаем список разрешенных полей из представления
         allowed_fields = getattr(view, 'ordering_fields', None)
+        print(f'{allowed_fields=}')
         ordering = super().get_ordering(request, queryset, view)
         
         # Если параметр 'ordering' не передан, используем сортировку по умолчанию
@@ -78,7 +108,7 @@ class CustomOrderingFilter(OrderingFilter):
         
         sanitized_ordering = []
         for field in ordering:
-            if field.lstrip('-') == 'length':
+            if field.lstrip('-') == 'length':  # это условие можно упростить elif покрывает этот случай
                 sanitized_ordering.append(field)
             elif field.lstrip('-') in allowed_fields:
                 sanitized_ordering.append(field)

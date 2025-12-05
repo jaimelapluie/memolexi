@@ -14,7 +14,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from memo.filters import WordFilter1, WordFilter2, CustomOrderingFilter
-from memo.models import WordCards, PartOfSpeech, WordCardsList, ReviewHistory  # Snippet
+from memo.models import WordCards, WordCardsList
+from references.models import PartOfSpeech, Language
 from memo.paginations import CustomPageNumberPagination, CastomLimitOffsetPagination
 from memo.permissions import IsOwnerOrReadOnly
 from memo.serializers import WordSerializer, WordReviewSerializer  # SnippetSerializer, GroupSerializer
@@ -49,17 +50,19 @@ class WordDetail(APIView):
             raise Http404('Запись не найдена (get_object)')
     
     def get(self, request, pk):
-        print(request.query_params)
+        print(f'WordDetail: get. request.query_params {request.query_params}')
         word = self.get_object(pk)  # Получаем объект записи
         serializer = WordSerializer(word)
         return Response(serializer.data)  # Возвращаем данные
     
     def put(self, request, pk, format=None):
+        print(f'WordDetail: put, request {request}, pk {pk}')
         word = self.get_object(pk)
         serializer = WordSerializer(word, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, pk):
@@ -73,17 +76,19 @@ class WordListView(APIView):
     # filter_backends = [DjangoFilterBackend]
     # filterset_class = WordFilter2
     
-    # filter_backends = [WordFilter1, CustomOrderingFilter]
-    filter_backends = [CustomOrderingFilter]
+    filter_backends = [WordFilter1, CustomOrderingFilter]
+    # filter_backends = [CustomOrderingFilter]
     ordering_fields = ['word', 'translation', 'time_create', 'length']
     
     pagination_class = CastomLimitOffsetPagination  # CustomPageNumberPagination
     
-    permission_classes = [IsAuthenticated] # [permissions.IsAuthenticatedOrReadOnly, ]  # [IsAuthenticated]
+    permission_classes = [IsAuthenticated]  # [permissions.IsAuthenticatedOrReadOnly, ]  # [IsAuthenticated]
     authentication_classes = [JWTAuthentication, SessionAuthentication, BasicAuthentication]
     
     def get(self, request):
-        print(request.user)
+        print(f"{request.user=}")
+        print(f"{request=}")
+        print(f"{request.query_params=}")
         queryset = (
             WordCards.objects.select_related("part_of_speech")
             .prefetch_related(
@@ -100,7 +105,7 @@ class WordListView(APIView):
         
         # Применяем фильтры
         for beckend_instance in self.filter_backends:
-            print('for beckend_instance in self.filter_backends ...')
+            print(f'for beckend_instance in self.filter_backends ...{beckend_instance}')
             queryset = beckend_instance().filter_queryset(request=request, queryset=queryset, view=self)
         
         # Применяем пагинацию
@@ -346,17 +351,17 @@ class SRSessionView(APIView):
         ]
         
         [
-    {"id": 7, "quality": 3},
-    {"id": 8, "quality": 3},
-    {"id": 9, "quality": 3},
-    {"id": 10, "quality": 3},
-    {"id": 11, "quality": 3},
-    {"id": 12, "quality": 3},
-    {"id": 13, "quality": 3},
-    {"id": 14, "quality": 3},
-    {"id": 15, "quality": 3},
-    {"id": 16, "quality": 3}
-]
+        {"id": 7, "quality": 3},
+        {"id": 8, "quality": 3},
+        {"id": 9, "quality": 3},
+        {"id": 10, "quality": 3},
+        {"id": 11, "quality": 3},
+        {"id": 12, "quality": 3},
+        {"id": 13, "quality": 3},
+        {"id": 14, "quality": 3},
+        {"id": 15, "quality": 3},
+        {"id": 16, "quality": 3}
+        ]
         """
         # Получаем все объекты, которые пришли в запросе
         ids = [item["id"] for item in request.data]
