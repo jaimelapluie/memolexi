@@ -1,42 +1,28 @@
-from typing import Any
-
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.db.models import Prefetch
-from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, viewsets, serializers
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.exceptions import NotFound
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from memo.filters import WordFilter1, WordFilter2, CustomOrderingFilter
+from memo.filters import WordFilter, CustomOrderingFilter
 from memo.models import WordCards, WordCardsList
-from references.models import PartOfSpeech, Language
-from memo.paginations import CustomPageNumberPagination, CastomLimitOffsetPagination
-from memo.permissions import IsOwnerOrReadOnly
-from memo.serializers import WordSerializer, WordReviewSerializer  # SnippetSerializer, GroupSerializer
+from memo.paginations import CastomLimitOffsetPagination
+from memo.serializers import WordSerializer, WordReviewSerializer
 from users.serializers import UserSerializer
 
-from django.http import JsonResponse, Http404
-
-from rest_framework.decorators import api_view, authentication_classes
-
-from rest_framework.reverse import reverse
-from rest_framework import renderers
+from django.http import Http404
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import action
 
 from memo.services import WordService
 from memo.tasks.word_transfer import WordTransfer
-from datetime import timedelta, datetime
 from django.utils.timezone import now
+
+
+User = get_user_model()
 
 
 class WordDetail(APIView):
@@ -71,12 +57,11 @@ class WordDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# @authentication_classes([SessionAuthentication, ])  # BasicAuthentication
 class WordListView(APIView):
     # filter_backends = [DjangoFilterBackend]
     # filterset_class = WordFilter2
     
-    filter_backends = [WordFilter1, CustomOrderingFilter]
+    filter_backends = [WordFilter, CustomOrderingFilter]
     # filter_backends = [CustomOrderingFilter]
     ordering_fields = ['word', 'translation', 'time_create', 'length']
     
@@ -86,13 +71,14 @@ class WordListView(APIView):
     authentication_classes = [JWTAuthentication, SessionAuthentication, BasicAuthentication]
     
     def get(self, request):
+        print(f"\nWordListView -> get {request.data=}")
         print(f"{request.user=}")
         print(f"{request=}")
         print(f"{request.query_params=}")
         queryset = (
             WordCards.objects.select_related("part_of_speech")
             .prefetch_related(
-                Prefetch(  # Перечитать как нюансы как это работает
+                Prefetch(  # Перечитать нюансы как это работает
                     "wordcards_links",
                     queryset=WordCardsList.objects.select_related("word_lists").only(
                         "word_lists__name", "word_lists__author"
@@ -100,7 +86,6 @@ class WordListView(APIView):
                 )
             )
             .filter(author=request.user)
-            # .all()
         )
         
         # Применяем фильтры
@@ -115,13 +100,12 @@ class WordListView(APIView):
         serializer = WordSerializer(paginated_queryset, many=True)
         return paginator.get_paginated_response(serializer.data)  # Response(serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request, format=None):
-        print(request.data)
-        # print(request.user)
-        # return
+    def post(self, request):
+        print(f"\nWordListView -> post {request.data=}")
         serializer = WordSerializer(data=request.data)
-        print(serializer)
+        print(f'\n post {serializer=}')
         if serializer.is_valid():
+            print(f'WordListView -> serializer.is_valid {serializer.validated_data=}')
             try:
                 # Если записи нет, создаём новую
                 word, created = WordService.create_word_with_master_list(serializer.validated_data, request.user)
@@ -145,7 +129,7 @@ class CheckUsernameView(APIView):
         if not username:
             return Response({"error": "username isn't provided"}, status=status.HTTP_400_BAD_REQUEST)
         
-        exists = get_user_model().objects.filter(username=username).exists()
+        exists = User.objects.filter(username=username).exists()
         print(f'CheckUsernameView(APIView): проверка наличия if not username: {exists}')
         return Response({"exists": exists})
 
@@ -155,20 +139,20 @@ class CheckTelegramIdView(APIView):
         telegram_id = request.query_params.get("telegram_id")
         print(f"CheckTelegramIdView - telegram_id = {telegram_id}")
         try:
-            finded_user_profile = get_user_model().objects.get(telegram_id=telegram_id)
+            finded_user_profile = User.objects.select_related('main_language').get(telegram_id=telegram_id)
             print(finded_user_profile)
             print(type(finded_user_profile))
             serializer = UserSerializer(finded_user_profile)
             return Response(serializer.data, status=status.HTTP_200_OK)
             
-        except get_user_model().DoesNotExist:
+        except User.DoesNotExist:
             return Response({"service message": f"Пользователь с telegram_id {telegram_id} не был найден"},
                             status=status.HTTP_404_NOT_FOUND)
-
-    
+ 
+ 
 class UserListView(APIView):
     def get(self, request):
-        usernames = get_user_model().objects.all()
+        usernames = User.objects.all()
         serializer = UserSerializer(usernames, many=True)
         print('A', type(usernames), usernames)
         print('B----')
@@ -177,45 +161,17 @@ class UserListView(APIView):
         [print(serializer.data[0]) if len(serializer.data) else ""]
         # return JsonResponse(serializer.data, safe=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def post(self, request):  # {"username": "kek"}
+        
+    def post(self, request):
         serializer = UserSerializer(data=request.data)
         print(f"serializer={serializer}")
         print(f"request.data= {request.data}")
-        # if serializer.is_valid():
-        #     try:
-        #         # Если записи нет, создаём новую
-        #         print('serializer.validated_data', serializer.validated_data)
-        #         print('Проверка идеи', serializer.validated_data['username'])
-        #         password = validated_data.pop("password", None)
-        #         # Создаю пользователя без пароля
-        #         user = self.Meta.model()(**validated_data)
-        #         # Устанавливаю пароль с хэшированием
-        #         if password is not None:
-        #             user.set_password(password)
-        #         user.save()
-        #         author, created = get_user_model().objects.get_or_create(**serializer.validated_data)
-        #         print(author, created)
-        #     except Exception as e:
-        #         return Response({"error_from UserListView.post": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        #
-        #     if created:
-        #         print('UserListView/post/created зашел')
-        #         print(f"type(author)={type(author)}")
-        #         print(f"UserSerializer(author).data={UserSerializer(author).data}")
-        #         print(f"type(UserSerializer(author).data)={type(UserSerializer(author).data)}")
-        #         return Response(UserSerializer(author).data, status=status.HTTP_201_CREATED)
-        #     else:
-        #         return Response(
-        #             {'message': f'"{serializer.validated_data.get(author)}" is already exists'},
-        #             status=status.HTTP_409_CONFLICT
-        #         )
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
         if serializer.is_valid():
             try:
                 username = serializer.validated_data.get('username')
-                user_exists = get_user_model().objects.filter(username=username).exists()
-                print(username, user_exists)
+                user_exists = User.objects.filter(username=username).exists()
+                print(f"{username=}", f"{user_exists=}")
                 if user_exists:
                     print("Зашел в UserListView в if user_exists ")
                     return Response({'message': f'"{serializer.validated_data.get(username)}" is already exists'},
@@ -231,8 +187,9 @@ class UserListView(APIView):
 class UserDetailView(APIView):  # сделать доступ по токену
     def put(self, request):
         print("UserDetailView -> put")
-        print(request)
-        print(request.query_params)
+        print(f'{request=}')
+        print(f'{request.data=}')
+        print(f'{request.query_params=}')
         username = request.query_params.get('username')
         telegram_id = request.query_params.get('telegram_id')
         
@@ -242,10 +199,10 @@ class UserDetailView(APIView):  # сделать доступ по токену
         
         try:
             if username:
-                user = get_user_model().objects.get(username=username)
+                user = User.objects.get(username=username)
             elif telegram_id:
-                user = get_user_model().objects.get(telegram_id=telegram_id)
-        except get_user_model().DoesNotExist:
+                user = User.objects.get(telegram_id=telegram_id)
+        except User.DoesNotExist:
             return Response({"service message": "Пользователь не найден"},
                             status=status.HTTP_404_NOT_FOUND)
         
@@ -257,11 +214,7 @@ class UserDetailView(APIView):  # сделать доступ по токену
 
 
 class UserDeleteView(APIView):
-    authentication_classes = [
-        JWTAuthentication,
-        SessionAuthentication,
-        BasicAuthentication
-    ]
+    authentication_classes = [JWTAuthentication, SessionAuthentication, BasicAuthentication]
     
     def delete(self, request):
         user = request.user
@@ -272,7 +225,7 @@ class UserDeleteView(APIView):
         try:
             user.delete()
             return Response({"service message": "Аккаунт удалён"})
-        except get_user_model().DoesNotExist as err:
+        except User.DoesNotExist as err:
             return Response({"service message": "Пользователь не найден"},
                             status=status.HTTP_404_NOT_FOUND)
     
