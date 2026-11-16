@@ -85,7 +85,7 @@ async def waiting_part_of_speech(message: Message, state: FSMContext):
                f'source: {data.get("source")} \n'
                f'part of speech: {data.get("part_of_speech")}')
     
-    await message.answer(text=caption, reply_markup=check_data_kb())
+    await message.answer(text=caption, reply_markup=await check_data_kb())
     await state.set_state(AddWordProces.waiting_check_state)
 
 

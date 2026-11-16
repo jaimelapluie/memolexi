@@ -2,7 +2,7 @@ from aiogram import Bot
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, BotCommand
 
 
-def menu_kb():
+async def menu_kb():
     kb_list = [
         [KeyboardButton(text="Старт")], [KeyboardButton(text="Регистрация", callback_data="/start_questionnaire")]
     ]
